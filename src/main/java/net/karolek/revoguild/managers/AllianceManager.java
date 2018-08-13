@@ -1,6 +1,5 @@
 package net.karolek.revoguild.managers;
 
-import lombok.Getter;
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.base.Alliance;
 import net.karolek.revoguild.base.Guild;
@@ -15,9 +14,7 @@ import java.util.Set;
 
 public class AllianceManager {
 
-    @Getter
     private static final List<Alliance> alliances = new ArrayList<>();
-    @Getter
     private static final List<String> invites = new ArrayList<>();
 
     public static boolean hasAlliance(Guild g, Guild o) {
@@ -27,31 +24,30 @@ public class AllianceManager {
         return false;
     }
 
-    public static boolean createAlliance(Guild g, Guild o) {
-        if (hasAlliance(g, o))
-            return false;
-
+    public static void createAlliance(Guild g, Guild o) {
+        if (hasAlliance(g, o)) {
+            return;
+        }
         Alliance a = new Alliance(g, o);
         a.insert();
-
         NameTagManager.createAlliance(g, o);
-
-        return alliances.add(a);
+        alliances.add(a);
     }
 
-    public static boolean removeAlliance(Guild g, Guild o) {
+    public static void removeAlliance(Guild g, Guild o) {
         if (!hasAlliance(g, o))
-            return false;
+            return;
 
         Alliance a = getAlliance(g, o);
+        assert a != null;
         a.delete();
 
         NameTagManager.removeAlliance(g, o);
 
-        return alliances.remove(a);
+        alliances.remove(a);
     }
 
-    public static Alliance getAlliance(Guild g, Guild o) {
+    private static Alliance getAlliance(Guild g, Guild o) {
         for (Alliance a : alliances)
             if ((a.getGuild1().equals(g) && a.getGuild2().equals(o)) || (a.getGuild2().equals(g) && a.getGuild1().equals(o)))
                 return a;
@@ -59,7 +55,7 @@ public class AllianceManager {
     }
 
     public static Set<Alliance> getGuildAlliances(Guild g) {
-        Set<Alliance> all = new HashSet<Alliance>();
+        Set<Alliance> all = new HashSet<>();
         for (Alliance a : alliances)
             if (a.getGuild1().equals(g) || a.getGuild2().equals(g))
                 all.add(a);
@@ -86,6 +82,14 @@ public class AllianceManager {
             Logger.warning("An error occurred while loading alliances!", "Error: " + e.getMessage());
             Logger.exception(e);
         }
+    }
+
+    public static List<Alliance> getAlliances() {
+        return alliances;
+    }
+
+    public static List<String> getInvites() {
+        return invites;
     }
 
 }

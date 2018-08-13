@@ -7,7 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 
-public class TabHighUpdateTask extends BukkitRunnable {
+class TabHighUpdateTask extends BukkitRunnable {
 
     @Override
     public void run() {

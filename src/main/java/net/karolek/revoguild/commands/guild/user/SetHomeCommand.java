@@ -19,19 +19,19 @@ public class SetHomeCommand extends SubCommand {
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isOwner(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
+        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
 
         Guild o = GuildManager.getGuild(p.getLocation());
 
         if (!g.equals(o))
-            return Util.sendMsg(p, Lang.ERROR_CANT_SET_HOME_OUTSIDE_CUBOID);
+            return Util.sendMessage(p, Lang.ERROR_CANT_SET_HOME_OUTSIDE_CUBOID);
 
         g.setHome(p.getLocation());
         g.update(true);
 
-        return Util.sendMsg(p, Lang.INFO_HOME_SET);
+        return Util.sendMessage(p, Lang.INFO_HOME_SET);
     }
 }

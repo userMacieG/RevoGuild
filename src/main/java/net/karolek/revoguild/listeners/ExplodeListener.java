@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
 
 public class ExplodeListener implements Listener {
 
-    private static Calendar calendar = new GregorianCalendar();
+    private static final Calendar calendar = new GregorianCalendar();
 
     @SuppressWarnings("deprecation")
     @EventHandler
@@ -35,38 +35,33 @@ public class ExplodeListener implements Listener {
             return;
 
         if (Config.TNT_PROTECTION_ENABLED)
-            if (g.getCreateTime().get() + TimeUtil.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis())
+            if (g.getCreateTime() + TimeUtil.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis())
                 e.setCancelled(true);
 
         if (!Config.TNT_CANTBUILD_ENABLED)
             return;
-        g.getLastExplodeTime().set(System.currentTimeMillis());
+        g.setLastExplodeTime(System.currentTimeMillis());
 
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-
-        if (!Config.TNT_CANTBUILD_ENABLED)
+        if (!Config.TNT_CANTBUILD_ENABLED) {
             return;
-
+        }
         Player p = e.getPlayer();
         Guild g = GuildManager.getGuild(e.getBlockPlaced().getLocation());
-        if (g == null)
+        if (g == null) {
             return;
-
-        if (!g.isMember(UserManager.getUser(p)))
+        }
+        if (!g.isMember(UserManager.getUser(p).getUuid())) {
             return;
-
-        // System.out.println((System.currentTimeMillis() -
-        // g.getLastExplodeTime()) + " >=" +
-        // TimeUtil.SECOND.getTime(Config.TIME_BUILDAFTERTNT));
-
-        if (System.currentTimeMillis() - g.getLastExplodeTime().get() >= TimeUtil.SECOND.getTime(Config.TNT_CANTBUILD_TIME))
+        }
+        if (System.currentTimeMillis() - g.getLastExplodeTime() >= TimeUtil.SECOND.getTime(Config.TNT_CANTBUILD_TIME)) {
             return;
-
+        }
         e.setCancelled(true);
-        Util.sendMsg(p, Lang.ERROR_EXPLODE_TNT);
+        Util.sendMessage(p, Lang.ERROR_EXPLODE_TNT);
 
     }
 }

@@ -1,15 +1,11 @@
 package net.karolek.revoguild.tablist;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.karolek.revoguild.utils.PacketUtil;
-import net.karolek.revoguild.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
-@Getter
-@Setter
 public class Tab {
 
     private final Player player;
@@ -37,10 +33,9 @@ public class Tab {
         return cell;
     }
 
-    public TabCell setSlot(int slot, String prefix, String name, String suffix) {
+    public void setSlot(int slot, String prefix, String name, String suffix) {
         TabCell cell = new TabCell(this, prefix, name, suffix, defaultPing);
         slots.put(slot, cell);
-        return cell;
     }
 
     public TabCell getSlot(int slot) {
@@ -53,14 +48,14 @@ public class Tab {
             if (slot != null) {
                 slot.sent = true;
                 PacketUtil.sendPacket(player, TabUtil.createPlayerPacket(slot.getName(), true, slot.getPing()));
-                if (slot.teamExists)
+                if (slot.teamExists) {
                     PacketUtil.sendPacket(player, TabUtil.createTeamPacket(slot.getName(), slot.getName(), slot.getPrefix(), slot.getSuffix(), 0, slot.getName()));
-
+                }
             } else {
                 String nullName = "§" + String.valueOf(i);
-                if (i >= 10)
+                if (i >= 10) {
                     nullName = "§" + String.valueOf(i / 10) + "§" + String.valueOf(i % 10);
-
+                }
                 PacketUtil.sendPacket(player, TabUtil.createPlayerPacket(nullName, true, this.defaultPing));
             }
         }
@@ -71,29 +66,52 @@ public class Tab {
         send();
     }
 
-    public void firstClear() {
-        for (Player p : Util.getOnlinePlayers())
+    private void firstClear() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
             PacketUtil.sendPacket(player, TabUtil.createPlayerPacket(p.getName(), false, this.defaultPing));
+        }
     }
 
     public void clear() {
         for (int i = 1; i <= 60; i++) {
             TabCell slot = toRemove.get(i);
-            if (slot == null)
+            if (slot == null) {
                 slot = slots.get(i);
+            }
             if (slot != null) {
                 slot.sent = false;
-                if (slot.teamExists)
+                if (slot.teamExists) {
                     PacketUtil.sendPacket(player, TabUtil.createTeamPacket(slot.getName(), slot.getName(), null, null, 1, slot.getName()));
+                }
                 PacketUtil.sendPacket(player, TabUtil.createPlayerPacket(slot.getName(), false, slot.getPing()));
             } else {
-                String nullName = "§" + String.valueOf(slot);
+                String nullName = "§" + String.valueOf((Object) null);
                 if (i >= 10)
                     nullName = "§" + String.valueOf(i / 10) + "§" + String.valueOf(i % 10);
                 PacketUtil.sendPacket(player, TabUtil.createPlayerPacket(nullName, false, defaultPing));
             }
         }
         toRemove.clear();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public HashMap<Integer, TabCell> getSlots() {
+        return slots;
+    }
+
+    public HashMap<Integer, TabCell> getToRemove() {
+        return toRemove;
+    }
+
+    public int getDefaultPing() {
+        return defaultPing;
+    }
+
+    public void setDefaultPing(int defaultPing) {
+        this.defaultPing = defaultPing;
     }
 
 }

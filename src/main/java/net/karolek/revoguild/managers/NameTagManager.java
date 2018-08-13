@@ -1,104 +1,150 @@
 package net.karolek.revoguild.managers;
 
-import lombok.Getter;
-import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.base.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.nametags.NameTag;
-import net.karolek.revoguild.nametags.NameTagMode;
-import net.karolek.revoguild.nametags.modes.ScoreBoardNameTag;
-import net.karolek.revoguild.nametags.modes.TagApiNameTag;
-import net.karolek.revoguild.utils.Logger;
+import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+
+import java.util.Objects;
 
 public class NameTagManager {
 
-    @Getter
-    private static NameTag nameTag;
-
-    public static void enable() {
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                switch (NameTagMode.getByName(Config.TAG_MODE)) {
-                    case TAG_API:
-                        Plugin p = Bukkit.getPluginManager().getPlugin("TagAPI");
-                        if (p == null || !p.isEnabled()) {
-                            Logger.warning("Can not find valid TagAPI instance!", "Using ScoreBoard nametags!");
-                            nameTag = new ScoreBoardNameTag();
-                            break;
-                        }
-                        nameTag = new TagApiNameTag();
-                        break;
-                    case SCOREBOARD:
-                    default:
-                        nameTag = new ScoreBoardNameTag();
-                        break;
-                }
-                Logger.info("Using '" + nameTag.getClass().getSimpleName().replace("NameTag", "") + "' to support nametags!");
-            }
-
-        }.runTask(GuildPlugin.getPlugin());
-
+    private static String parse(String color, Guild g) {
+        if (g == null) {
+            return Util.fixColor(color);
+        }
+        String format = Config.TAG_FORMAT;
+        format = format.replace("{COLOR}", color);
+        format = Lang.parse(format, g);
+        return format;
     }
 
     public static void initPlayer(Player p) {
-        if (nameTag == null)
-            return;
-        nameTag.initPlayer(p);
+        Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+        Guild g = GuildManager.getGuild(p);
+        Team t;
+        for (Guild o : GuildManager.getGuilds().values()) {
+            t = sb.getTeam(o.getTag());
+            if (t == null) {
+                t = sb.registerNewTeam(o.getTag());
+            }
+            if (g == null) {
+                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+            } else if (Objects.equals(g.getTag(), o.getTag())) {
+                if (g.isPvp()) {
+                    t.setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, o));
+                } else {
+                    t.setPrefix(parse(Config.TAG_COLOR_FRIEND, o));
+                }
+            } else if (AllianceManager.hasAlliance(o, g)) {
+                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, o));
+            } else {
+                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+            }
+        }
+        Team noguild = sb.getTeam("noguild");
+        if (noguild == null) {
+            noguild = sb.registerNewTeam("noguild");
+            noguild.setAllowFriendlyFire(true);
+            noguild.setCanSeeFriendlyInvisibles(false);
+            noguild.setPrefix(parse(Config.TAG_COLOR_NOGUILD, null));
+        }
+        p.setScoreboard(sb);
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.getScoreboard().getTeam(g != null ? g.getTag() : "noguild").addPlayer(p);
+            Guild onlineguild = GuildManager.getGuild(online);
+            p.getScoreboard().getTeam(onlineguild != null ? onlineguild.getTag() : "noguild").addPlayer(online);
+        }
     }
 
     public static void createGuild(Guild g, Player p) {
-        if (nameTag == null)
-            return;
-        nameTag.createGuild(g, p);
+        for (Player o : Bukkit.getOnlinePlayers()) {
+            Scoreboard sb = o.getScoreboard();
+            Team t = sb.registerNewTeam(g.getTag());
+            if (o == p) {
+                t.setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+            } else {
+                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+            }
+            t.addPlayer(p);
+        }
     }
 
     public static void removeGuild(Guild g) {
-        if (nameTag == null)
-            return;
-        nameTag.removeGuild(g);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            Scoreboard sb = p.getScoreboard();
+            sb.getTeam(g.getTag()).unregister();
+            Team noguild = sb.getTeam("noguild");
+            for (Player guildplayer : g.getOnlineMembers()) {
+                noguild.addPlayer(guildplayer);
+            }
+        }
     }
 
     public static void setPvp(Guild g) {
-        if (nameTag == null)
-            return;
-        nameTag.setPvp(g);
+        for (Player p : g.getOnlineMembers()) {
+            Team t = p.getScoreboard().getTeam(g.getTag());
+            if (g.isPvp()) {
+                t.setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, g));
+            } else {
+                t.setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+            }
+        }
     }
 
     public static void joinToGuild(Guild g, Player p) {
-        if (nameTag == null)
-            return;
-        nameTag.joinToGuild(g, p);
+        for (Player o : Bukkit.getOnlinePlayers()) {
+            o.getScoreboard().getTeam(g.getTag()).addPlayer(p);
+        }
+        if (g.isPvp()) {
+            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, g));
+        } else {
+            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+        }
     }
 
     public static void leaveFromGuild(Guild g, OfflinePlayer p) {
-        if (nameTag == null)
-            return;
-        nameTag.leaveFromGuild(g, p);
+        for (Player o : Bukkit.getOnlinePlayers()) {
+            o.getScoreboard().getTeam("noguild").addPlayer(p);
+        }
+        if (p.isOnline()) {
+            p.getPlayer().getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+        }
     }
 
     public static void createAlliance(Guild g, Guild o) {
-        if (nameTag == null)
-            return;
-        nameTag.createAlliance(g, o);
+        for (Player p : g.getOnlineMembers()) {
+            Team t = p.getScoreboard().getTeam(o.getTag());
+            if (t != null) {
+                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, o));
+            }
+        }
+        for (Player p : o.getOnlineMembers()) {
+            Team t = p.getScoreboard().getTeam(g.getTag());
+            if (t != null) {
+                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, g));
+            }
+        }
     }
 
     public static void removeAlliance(Guild g, Guild o) {
-        if (nameTag == null)
-            return;
-        nameTag.removeAlliance(g, o);
-    }
-
-    public static NameTagMode getNameTagMode() {
-        if (nameTag == null)
-            return null;
-        return nameTag.getNameTagMode();
+        for (Player p : g.getOnlineMembers()) {
+            Team t = p.getScoreboard().getTeam(o.getTag());
+            if (t != null) {
+                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+            }
+        }
+        for (Player p : o.getOnlineMembers()) {
+            Team t = p.getScoreboard().getTeam(g.getTag());
+            if (t != null) {
+                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+            }
+        }
     }
 
 }

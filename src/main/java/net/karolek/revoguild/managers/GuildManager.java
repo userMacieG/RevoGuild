@@ -1,6 +1,5 @@
 package net.karolek.revoguild.managers;
 
-import lombok.Getter;
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.base.Guild;
 import net.karolek.revoguild.base.User;
@@ -21,22 +20,19 @@ import java.util.Map;
 
 public class GuildManager {
 
-    @Getter
-    private static final Map<String, Guild> guilds = new HashMap<String, Guild>();
+    private static final Map<String, Guild> guilds = new HashMap<>();
 
     public static Guild createGuild(String tag, String name, Player owner) {
         Guild g = new Guild(tag, name, owner);
-        g.insert();
         User u = UserManager.getUser(owner);
-        g.addInvite(u);
-        g.addMember(u);
-        g.addTreasureUser(u);
+        g.addInvite(u.getUuid());
+        g.addMember(u.getUuid());
+        g.addTreasureUser(u.getUuid());
         guilds.put(g.getTag().toUpperCase(), g);
         NameTagManager.createGuild(g, owner);
         setGuildRoom(g);
         owner.teleport(g.getCuboid().getCenter());
         g.setHome(g.getCuboid().getCenter());
-        g.update(false);
         TabThread.restart();
         UptakeUtil.respawnGuild(g);
         return g;
@@ -66,29 +62,25 @@ public class GuildManager {
     }
 
     public static Guild getGuild(Player p) {
-        User u = UserManager.getUser(p);
-        for (Guild g : guilds.values())
-            if (g.isMember(u))
+        for (Guild g : guilds.values()) {
+            if (g.isMember(p.getUniqueId())) {
                 return g;
+            }
+        }
         return null;
     }
 
     public static boolean canCreateGuild(Location loc) {
-        if (!loc.getWorld().getName().equals(Config.CUBOID_WORLD))
+        if (!loc.getWorld().getName().equals(Config.CUBOID_WORLD)) {
             return false;
-
+        }
         int spawnX = loc.getWorld().getSpawnLocation().getBlockX();
         int spawnZ = loc.getWorld().getSpawnLocation().getBlockZ();
-
-        if (Config.CUBOID_SPAWN_ENABLED)
-            if (Math.abs(loc.getBlockX() - spawnX) < Config.CUBOID_SPAWN_DISTANCE && Math.abs(loc.getBlockZ() - spawnZ) < Config.CUBOID_SPAWN_DISTANCE)
+        if (Config.CUBOID_SPAWN_ENABLED) {
+            if (Math.abs(loc.getBlockX() - spawnX) < Config.CUBOID_SPAWN_DISTANCE && Math.abs(loc.getBlockZ() - spawnZ) < Config.CUBOID_SPAWN_DISTANCE) {
                 return false;
-
-
-        // if (Config.CUBOID_SPAWN_ENBLAED)
-        //      if ((Math.abs(loc.getBlockX()) < Config.CUBOID_SPAWN_DISTANCE) && (Math.abs(loc.getBlockZ()) < Config.CUBOID_SPAWN_DISTANCE))
-        //        return false;
-
+            }
+        }
         int mindistance = Config.CUBOID_SIZE_MAX * 2 + Config.CUBOID_SIZE_BETWEEN;
         for (Guild g : guilds.values())
             if ((Math.abs(g.getCuboid().getCenterX() - loc.getBlockX()) <= mindistance) && (Math.abs(g.getCuboid().getCenterZ() - loc.getBlockZ()) <= mindistance))
@@ -97,9 +89,11 @@ public class GuildManager {
     }
 
     public static int getPosition(Guild guild) {
-        for (RankList.Data<Guild> guildData : TabThread.getInstance().getRankList().getTopGuilds())
-            if (guildData.getKey().equals(guild))
+        for (RankList.Data<Guild> guildData : TabThread.getInstance().getRankList().getTopGuilds()) {
+            if (guildData.getKey().equals(guild)) {
                 return TabThread.getInstance().getRankList().getTopGuilds().indexOf(guildData) + 1;
+            }
+        }
         return -1;
     }
 
@@ -107,23 +101,27 @@ public class GuildManager {
     public static void setGuildRoom(Guild g) {
         Location c = g.getCuboid().getCenter();
         c.setY(59);
-        for (Location loc : SpaceUtil.getSquare(c, 4, 3))
+        for (Location loc : SpaceUtil.getSquare(c, 4, 3)) {
             loc.getBlock().setType(Material.AIR);
-        for (Location loc : SpaceUtil.getSquare(c, 4))
+        }
+        for (Location loc : SpaceUtil.getSquare(c, 4)) {
             loc.getBlock().setType(Material.OBSIDIAN);
-        for (Location loc : SpaceUtil.getCorners(c, 4, 3))
+        }
+        for (Location loc : SpaceUtil.getCorners(c, 4, 3)) {
             loc.getBlock().setType(Material.OBSIDIAN);
+        }
         c.add(0, 4, 0);
-        for (Location loc : SpaceUtil.getWalls(c, 4))
+        for (Location loc : SpaceUtil.getWalls(c, 4)) {
             loc.getBlock().setType(Material.OBSIDIAN);
-        //g.getCuboid().getCenter().getBlock().setType(Material.BEDROCK);
+        }
     }
 
     public static void removeGuildRoom(Guild g) {
         Location c = g.getCuboid().getCenter();
         c.setY(59);
-        for (Location loc : SpaceUtil.getSquare(c, 4, 4))
+        for (Location loc : SpaceUtil.getSquare(c, 4, 4)) {
             loc.getBlock().setType(Material.AIR);
+        }
     }
 
     public static void enable() {
@@ -138,6 +136,10 @@ public class GuildManager {
             Logger.warning("An error occurred while loading guilds!", "Error: " + e.getMessage());
             Logger.exception(e);
         }
+    }
+
+    public static Map<String, Guild> getGuilds() {
+        return guilds;
     }
 
 }

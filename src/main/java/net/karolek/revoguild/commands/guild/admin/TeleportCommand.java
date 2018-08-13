@@ -16,14 +16,14 @@ public class TeleportCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         p.teleport(g.getCuboid().getCenter());
-        return Util.sendMsg(p, Lang.TELEPORT_END);
+        return Util.sendMessage(p, Lang.TELEPORT_END);
     }
 }

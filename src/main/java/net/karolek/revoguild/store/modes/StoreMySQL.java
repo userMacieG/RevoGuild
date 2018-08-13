@@ -18,9 +18,9 @@ public class StoreMySQL implements Store {
 
     private final String host, user, pass, name, prefix;
     private final int port;
+    private final Executor executor;
     private Connection conn;
     private long time;
-    private Executor executor;
 
     public StoreMySQL(String host, int port, String user, String pass, String name, String prefix) {
         this.host = host;
@@ -66,15 +66,12 @@ public class StoreMySQL implements Store {
 
     public void update(boolean now, final String update) {
         time = System.currentTimeMillis();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    conn.createStatement().executeUpdate(update.replace("{P}", prefix));
-                } catch (SQLException e) {
-                    Logger.warning("An error occurred with given query '" + update.replace("{P}", prefix) + "'!", "Error: " + e.getMessage());
-                    Logger.exception(e);
-                }
+        Runnable r = () -> {
+            try {
+                conn.createStatement().executeUpdate(update.replace("{P}", prefix));
+            } catch (SQLException e) {
+                Logger.warning("An error occurred with given query '" + update.replace("{P}", prefix) + "'!", "Error: " + e.getMessage());
+                Logger.exception(e);
             }
         };
 

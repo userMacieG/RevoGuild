@@ -16,12 +16,12 @@ import java.util.Map.Entry;
 
 public class TabScheme {
 
-    public static Map<Integer, String> slots = new HashMap<>();
-    public static List<Integer> updateSlots = new ArrayList<Integer>();
-    private static File file = new File(GuildPlugin.getPlugin().getDataFolder(), "tablist.yml");
+    public static final Map<Integer, String> slots = new HashMap<>();
+    private static final File file = new File(GuildPlugin.getPlugin().getDataFolder(), "tablist.yml");
+    public static List<Integer> updateSlots = new ArrayList<>();
     private static FileConfiguration c = null;
 
-    public static void loadTablist() {
+    private static void loadTablist() {
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -38,7 +38,7 @@ public class TabScheme {
 
     }
 
-    public static void saveTablist() {
+    private static void saveTablist() {
         try {
             for (Entry<Integer, String> e : slots.entrySet())
                 c.set("tablist.slots." + e.getKey(), e.getValue());

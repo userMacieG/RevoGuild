@@ -16,19 +16,19 @@ public class TopCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        Util.sendMsg(p, Lang.LIST_RANKING_HEADER);
+        Util.sendMessage(p, Lang.LIST_RANKING_HEADER);
 
         int i = 1;
         for (Data<User> u : TabThread.getInstance().getRankList().getTopPlayers()) {
             if (i > 10)
                 break;
 
-            Util.sendMsg(p, Lang.parse(Lang.LIST_RANKING_ELEMENT, u.getKey()).replace("{POS}", Integer.toString(i)));
+            Util.sendMessage(p, Lang.parse(Lang.LIST_RANKING_ELEMENT, u.getKey()).replace("{POS}", Integer.toString(i)));
 
             i++;
         }
 
-        return Util.sendMsg(p, Lang.LIST_RANKING_FOOTER);
+        return Util.sendMessage(p, Lang.LIST_RANKING_FOOTER);
 
     }
 }

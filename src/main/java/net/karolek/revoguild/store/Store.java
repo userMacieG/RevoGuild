@@ -5,20 +5,20 @@ import java.sql.ResultSet;
 
 public interface Store {
 
-    public Connection getConnection();
+    Connection getConnection();
 
-    public boolean connect();
+    boolean connect();
 
-    public void disconnect();
+    void disconnect();
 
-    public void reconnect();
+    void reconnect();
 
-    public boolean isConnected();
+    boolean isConnected();
 
-    public ResultSet query(String query);
+    ResultSet query(String query);
 
-    public void update(boolean now, String update);
+    void update(boolean now, String update);
 
-    public StoreMode getStoreMode();
+    StoreMode getStoreMode();
 
 }

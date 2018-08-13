@@ -1,6 +1,5 @@
 package net.karolek.revoguild.store.modes;
 
-import lombok.Data;
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.store.Store;
@@ -17,23 +16,18 @@ import java.sql.SQLException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Data
 public class StoreSQLITE implements Store {
 
     private final String name, prefix;
+    private final Executor executor;
     private Connection conn;
     private long time;
-    private Executor executor;
 
     public StoreSQLITE(String name, String prefix) {
-
         this.name = name;
         this.prefix = prefix;
-
         this.executor = Executors.newSingleThreadExecutor();
-
         this.time = System.currentTimeMillis();
-
         new BukkitRunnable() {
 
             @Override
@@ -65,15 +59,12 @@ public class StoreSQLITE implements Store {
 
     public void update(boolean now, final String update) {
         time = System.currentTimeMillis();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    conn.createStatement().executeUpdate(update.replace("{P}", prefix));
-                } catch (SQLException e) {
-                    Logger.warning("An error occurred with given query '" + update.replace("{P}", prefix) + "'!", "Error: " + e.getMessage());
-                    Logger.exception(e);
-                }
+        Runnable r = () -> {
+            try {
+                conn.createStatement().executeUpdate(update.replace("{P}", prefix));
+            } catch (SQLException e) {
+                Logger.warning("An error occurred with given query '" + update.replace("{P}", prefix) + "'!", "Error: " + e.getMessage());
+                Logger.exception(e);
             }
         };
 
@@ -132,4 +123,7 @@ public class StoreSQLITE implements Store {
         return StoreMode.SQLITE;
     }
 
+    public String getName() {
+        return name;
+    }
 }

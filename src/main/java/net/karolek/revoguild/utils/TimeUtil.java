@@ -10,7 +10,7 @@ public enum TimeUtil {
     DAY(86_400_000, 24),
     WEEK(604_800_000, 7);
 
-    public static final int MPT = 50;
+    private static final int MPT = 50;
     private final int time, timeMulti;
 
     TimeUtil(final int time, final int timeMulti) {
@@ -26,7 +26,7 @@ public enum TimeUtil {
         return this.time;
     }
 
-    public int getTick() {
+    private int getTick() {
         return this.time / MPT;
     }
 

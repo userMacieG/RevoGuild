@@ -20,16 +20,16 @@ public class PvpCommand extends SubCommand {
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isOwner(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
+        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
 
         g.setPvp(!g.isPvp());
         g.update(false);
 
         for (Player o : g.getOnlineMembers())
-            Util.sendMsg(o, g.isPvp() ? Lang.INFO_PVP_ON : Lang.INFO_PVP_OFF);
+            Util.sendMessage(o, g.isPvp() ? Lang.INFO_PVP_ON : Lang.INFO_PVP_OFF);
 
         NameTagManager.setPvp(g);
 

@@ -25,69 +25,67 @@ public class TreasureCommand extends SubCommand {
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
         User pU = UserManager.getUser(p);
 
         if (args.length == 0) {
-            if (g.isTreasureUser(pU)) {
+            if (g.isTreasureUser(pU.getUuid())) {
                 if (Config.TREASURE_OPENONLYONGUILD) {
                     Guild o = GuildManager.getGuild(p.getLocation());
                     if (!g.equals(o))
-                        return Util.sendMsg(p, Lang.ERROR_CANT_OPEN_TREASURE_OUTSIDE_CUBOID);
+                        return Util.sendMessage(p, Lang.ERROR_CANT_OPEN_TREASURE_OUTSIDE_CUBOID);
                 }
                 g.openTreasure(p);
-                return Util.sendMsg(p, Lang.INFO_TREASURE_OPENED);
+                return Util.sendMessage(p, Lang.INFO_TREASURE_OPENED);
             }
-            return Util.sendMsg(p, Lang.ERROR_CANT_OPEN_TREASURE);
-        } else if (args.length >= 1) {
-            if (!g.isOwner(pU))
-                return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
-            OfflinePlayer op = null;
-            User u = null;
+            return Util.sendMessage(p, Lang.ERROR_CANT_OPEN_TREASURE);
+        } else {
+            if (!g.isOwner(pU.getUuid()))
+                return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
+            OfflinePlayer op;
+            User u;
             switch (args[0]) {
                 case "dodaj":
                     if (args.length != 2)
-                        return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+                        return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
                     op = Bukkit.getOfflinePlayer(args[1]);
                     u = UserManager.getUser(op);
 
-                    if (!g.isMember(u))
-                        return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
+                    if (!g.isMember(u.getUuid()))
+                        return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
 
-                    if (g.isTreasureUser(u))
-                        return Util.sendMsg(p, Lang.ERROR_PLAYER_IS_TREASURE_USER);
+                    if (g.isTreasureUser(u.getUuid()))
+                        return Util.sendMessage(p, Lang.ERROR_PLAYER_IS_TREASURE_USER);
 
-                    g.addTreasureUser(u);
+                    g.addTreasureUser(u.getUuid());
                     if (op.isOnline())
-                        Util.sendMsg(op.getPlayer(), Lang.parse(Lang.INFO_TREASURE_USER_ADD_INFO, p));
-                    return Util.sendMsg(p, Lang.parse(Lang.INFO_TREASURE_USER_ADD, op));
+                        Util.sendMessage(op.getPlayer(), Lang.parse(Lang.INFO_TREASURE_USER_ADD_INFO, p));
+                    return Util.sendMessage(p, Lang.parse(Lang.INFO_TREASURE_USER_ADD, op));
                 case "usun":
                     if (args.length != 2)
-                        return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+                        return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
                     op = Bukkit.getOfflinePlayer(args[1]);
                     u = UserManager.getUser(op);
 
-                    if (!g.isMember(u))
-                        return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
+                    if (!g.isMember(u.getUuid()))
+                        return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
 
-                    if (!g.isTreasureUser(u))
-                        return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_TREASURE_USER);
+                    if (!g.isTreasureUser(u.getUuid()))
+                        return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_TREASURE_USER);
 
-                    g.removeTreasureUser(u);
+                    g.removeTreasureUser(u.getUuid());
                     if (op.isOnline())
-                        Util.sendMsg(op.getPlayer(), Lang.parse(Lang.INFO_TREASURE_USER_REMOVE_INFO, p));
-                    return Util.sendMsg(p, Lang.parse(Lang.INFO_TREASURE_USER_REMOVE, op));
+                        Util.sendMessage(op.getPlayer(), Lang.parse(Lang.INFO_TREASURE_USER_REMOVE_INFO, p));
+                    return Util.sendMessage(p, Lang.parse(Lang.INFO_TREASURE_USER_REMOVE, op));
                 case "lista":
-                    return Util.sendMsg(p, Lang.INFO_TREASURE_USERS.replace("{USERS}", Lang.getTreasureUsers(g)));
+                    return Util.sendMessage(p, Lang.INFO_TREASURE_USERS.replace("{USERS}", Lang.getTreasureUsers(g)));
                 default:
-                    return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+                    return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
             }
         }
 
-        g.openTreasure(p);
-        return true;
     }
 }

@@ -24,33 +24,31 @@ public class OwnerCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isOwner(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
+        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
 
         @SuppressWarnings("deprecation")
         Player o = Bukkit.getPlayer(args[0]);
         User u = UserManager.getUser(o);
-        if (o == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_PLAYER);
 
-        if (!g.isMember(u))
-            return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
+        if (!g.isMember(u.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
 
         List<ItemStack> items = ItemUtil.getItems(p.hasPermission("revoguild.vip") ? Config.COST_OWNER_VIP : Config.COST_OWNER_NORMAL, 1);
 
         if (!ItemUtil.checkAndRemove(items, p))
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
 
-        g.getOwner().set(u);
+        g.setOwner(u.getUuid());
 
-        Util.sendMsg(p, Lang.INFO_OWNER_CHANGED);
-        return Util.sendMsg(o, Lang.INFO_NOW_OWNER);
+        Util.sendMessage(p, Lang.INFO_OWNER_CHANGED);
+        return Util.sendMessage(o, Lang.INFO_NOW_OWNER);
     }
 }

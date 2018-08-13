@@ -9,8 +9,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -27,28 +25,32 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-    public static boolean sendMsg(CommandSender sender, String message, String permission) {
-        if (permission != null)
-            if (!sender.hasPermission(permission))
+    private static boolean sendMessage(CommandSender sender, String message, String permission) {
+        if (permission != null) {
+            if (!sender.hasPermission(permission)) {
                 sender.sendMessage(fixColor(message));
+            }
+        }
         sender.sendMessage(fixColor(message));
         return true;
     }
 
-    public static boolean sendMsg(CommandSender sender, String message) {
-        return sendMsg(sender, message, null);
+    public static boolean sendMessage(CommandSender sender, String message) {
+        return sendMessage(sender, message, null);
     }
 
-    public static boolean sendMsg(Collection<? extends CommandSender> senders, String message, String permission) {
-        sendMsg(Bukkit.getConsoleSender(), message, permission);
-        for (CommandSender sender : senders)
-            sendMsg(sender, message, permission);
+    public static boolean sendMessage(Collection<? extends CommandSender> senders, String message, String permission) {
+        sendMessage(Bukkit.getConsoleSender(), message, permission);
+        for (CommandSender sender : senders) {
+            sendMessage(sender, message, permission);
+        }
         return true;
     }
 
-    public static boolean sendMsg(Collection<? extends CommandSender> senders, String message) {
-        for (CommandSender sender : senders)
-            sendMsg(sender, message, null);
+    public static boolean sendMessage(Collection<? extends CommandSender> senders, String message) {
+        for (CommandSender sender : senders) {
+            sendMessage(sender, message, null);
+        }
         return true;
     }
 
@@ -57,21 +59,15 @@ public class Util {
     }
 
     public static List<String> fixColor(List<String> strings) {
-        List<String> colors = new ArrayList<String>();
-        for (String s : strings)
+        List<String> colors = new ArrayList<>();
+        for (String s : strings) {
             colors.add(fixColor(s));
+        }
         return colors;
     }
 
-	/*
-     * public static Object eval(String s) { ScriptEngineManager manager= new
-	 * ScriptEngineManager(); ScriptEngine engine =
-	 * manager.getEngineByName("js"); Object o = null; try { o = engine.eval(s);
-	 * } catch (ScriptException e) { e.printStackTrace(); } return o; }
-	 */
-
     public static int calculate(String s) {
-        int i = 1;
+        int i;
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("js");
         Number n = 1;
@@ -80,20 +76,15 @@ public class Util {
         } catch (ScriptException e) {
             e.printStackTrace();
         }
-
         i = n.intValue();
-
         return i;
     }
 
     public static String[] fixColor(String[] strings) {
-        for (int i = 0; i < strings.length; i++)
+        for (int i = 0; i < strings.length; i++) {
             strings[i] = fixColor(strings[i]);
+        }
         return strings;
-    }
-
-    public static Collection<? extends Player> getOnlinePlayers() {
-        return Arrays.asList(Bukkit.getOnlinePlayers());
     }
 
     public static Player getDamager(EntityDamageByEntityEvent event) {
@@ -102,8 +93,9 @@ public class Util {
             return ((Player) damager);
         } else if (damager instanceof Projectile) {
             Projectile p = (Projectile) damager;
-            if (p instanceof Player)
+            if (p instanceof Player) {
                 return (Player) p.getShooter();
+            }
         }
         return null;
     }
@@ -113,11 +105,9 @@ public class Util {
             OutputStream out = new FileOutputStream(file);
             byte[] buf = new byte[1024];
             int len;
-
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-
             out.close();
             in.close();
         } catch (Exception e) {
@@ -126,19 +116,17 @@ public class Util {
     }
 
     public static String secondsToString(int seconds) {
-        if(seconds == 0) return "nigdy";
-
-        LinkedHashMap<Integer, String> values = new LinkedHashMap<Integer, String>(6);
-
+        if (seconds == 0) {
+            return "nigdy";
+        }
+        LinkedHashMap<Integer, String> values = new LinkedHashMap<>(6);
         values.put(60 * 60 * 24 * 30 * 12, "y");
         values.put(60 * 60 * 24 * 30, "msc");
         values.put(60 * 60 * 24, "d");
         values.put(60 * 60, "h");
         values.put(60, "min");
         values.put(1, "s");
-
         String[] v = new String[6];
-
         int i = 0;
         for (Entry<Integer, String> e : values.entrySet()) {
             int iDiv = seconds / e.getKey();
@@ -149,7 +137,6 @@ public class Util {
             }
             ++i;
         }
-
         return StringUtils.join(v, " ");
     }
 
@@ -162,9 +149,11 @@ public class Util {
     }
 
     public static boolean containsIgnoreCase(String[] array, String element) {
-        for (String s : array)
-            if (s.equalsIgnoreCase(element))
+        for (String s : array) {
+            if (s.equalsIgnoreCase(element)) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -181,10 +170,12 @@ public class Util {
     }
 
     public static boolean getBoolean(String s) {
-        if ("true".equalsIgnoreCase(s) || "tak".equalsIgnoreCase(s) || "t".equalsIgnoreCase(s) || "1".equalsIgnoreCase(s) || "yes".equalsIgnoreCase(s) || "y".equalsIgnoreCase(s))
+        if ("true".equalsIgnoreCase(s) || "tak".equalsIgnoreCase(s) || "t".equalsIgnoreCase(s) || "1".equalsIgnoreCase(s) || "yes".equalsIgnoreCase(s) || "y".equalsIgnoreCase(s)) {
             return true;
-        if ("false".equalsIgnoreCase(s) || "nie".equalsIgnoreCase(s) || "n".equalsIgnoreCase(s) || "0".equalsIgnoreCase(s) || "no".equalsIgnoreCase(s))
+        }
+        if ("false".equalsIgnoreCase(s) || "nie".equalsIgnoreCase(s) || "n".equalsIgnoreCase(s) || "0".equalsIgnoreCase(s) || "no".equalsIgnoreCase(s)) {
             return false;
+        }
         return false;
     }
 
@@ -198,7 +189,7 @@ public class Util {
 
     public static long parseDateDiff(String time, boolean future) {
         try {
-            Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", 2);
+            Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE);
             Matcher m = timePattern.matcher(time);
             int years = 0;
             int months = 0;
@@ -210,26 +201,34 @@ public class Util {
             boolean found = false;
             while (m.find()) {
                 if ((m.group() != null) && (!m.group().isEmpty())) {
-                    for (int i = 0; i < m.groupCount(); i++)
+                    for (int i = 0; i < m.groupCount(); i++) {
                         if ((m.group(i) != null) && (!m.group(i).isEmpty())) {
                             found = true;
                             break;
                         }
+                    }
                     if (found) {
-                        if ((m.group(1) != null) && (!m.group(1).isEmpty()))
+                        if ((m.group(1) != null) && (!m.group(1).isEmpty())) {
                             years = Integer.parseInt(m.group(1));
-                        if ((m.group(2) != null) && (!m.group(2).isEmpty()))
+                        }
+                        if ((m.group(2) != null) && (!m.group(2).isEmpty())) {
                             months = Integer.parseInt(m.group(2));
-                        if ((m.group(3) != null) && (!m.group(3).isEmpty()))
+                        }
+                        if ((m.group(3) != null) && (!m.group(3).isEmpty())) {
                             weeks = Integer.parseInt(m.group(3));
-                        if ((m.group(4) != null) && (!m.group(4).isEmpty()))
+                        }
+                        if ((m.group(4) != null) && (!m.group(4).isEmpty())) {
                             days = Integer.parseInt(m.group(4));
-                        if ((m.group(5) != null) && (!m.group(5).isEmpty()))
+                        }
+                        if ((m.group(5) != null) && (!m.group(5).isEmpty())) {
                             hours = Integer.parseInt(m.group(5));
-                        if ((m.group(6) != null) && (!m.group(6).isEmpty()))
+                        }
+                        if ((m.group(6) != null) && (!m.group(6).isEmpty())) {
                             minutes = Integer.parseInt(m.group(6));
-                        if ((m.group(7) == null) || (m.group(7).isEmpty()))
+                        }
+                        if ((m.group(7) == null) || (m.group(7).isEmpty())) {
                             break;
+                        }
                         seconds = Integer.parseInt(m.group(7));
                         break;
                     }
@@ -239,36 +238,37 @@ public class Util {
                 return -1L;
             }
             Calendar c = new GregorianCalendar();
-            if (years > 0)
-                c.add(1, years * (future ? 1 : -1));
-            if (months > 0)
-                c.add(2, months * (future ? 1 : -1));
-            if (weeks > 0)
-                c.add(3, weeks * (future ? 1 : -1));
-            if (days > 0)
-                c.add(5, days * (future ? 1 : -1));
-            if (hours > 0)
-                c.add(11, hours * (future ? 1 : -1));
-            if (minutes > 0)
-                c.add(12, minutes * (future ? 1 : -1));
-            if (seconds > 0)
-                c.add(13, seconds * (future ? 1 : -1));
+            if (years > 0) {
+                c.add(Calendar.YEAR, years * (future ? 1 : -1));
+            }
+            if (months > 0) {
+                c.add(Calendar.MONTH, months * (future ? 1 : -1));
+            }
+            if (weeks > 0) {
+                c.add(Calendar.WEEK_OF_YEAR, weeks * (future ? 1 : -1));
+            }
+            if (days > 0) {
+                c.add(Calendar.DATE, days * (future ? 1 : -1));
+            }
+            if (hours > 0) {
+                c.add(Calendar.HOUR_OF_DAY, hours * (future ? 1 : -1));
+            }
+            if (minutes > 0) {
+                c.add(Calendar.MINUTE, minutes * (future ? 1 : -1));
+            }
+            if (seconds > 0) {
+                c.add(Calendar.SECOND, seconds * (future ? 1 : -1));
+            }
             Calendar max = new GregorianCalendar();
-            max.add(1, 10);
+            max.add(Calendar.YEAR, 10);
             if (c.after(max)) {
                 return max.getTimeInMillis();
             }
             return c.getTimeInMillis();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return -1L;
-    }
-
-    public static void giveItems(Player p, ItemStack... items) {
-        Inventory i = p.getInventory();
-        HashMap<Integer, ItemStack> notStored = i.addItem(items);
-        for (Entry<Integer, ItemStack> e : notStored.entrySet())
-            p.getWorld().dropItemNaturally(p.getLocation(), (ItemStack) e.getValue());
     }
 
 }

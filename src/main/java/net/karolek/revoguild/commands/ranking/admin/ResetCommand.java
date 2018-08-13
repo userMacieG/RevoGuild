@@ -17,18 +17,18 @@ public class ResetCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
-
+        if (args.length != 1) {
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+        }
         User u = UserManager.getUserByName(args[0]);
-
-        if (u == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_USER);
-
-        u.getPoints().set(Config.RANKING_STARTPOINTS);
-        u.getKills().set(0);
-        u.getDeaths().set(0);
+        if (u == null) {
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_USER);
+        }
+        u.setPoints(Config.RANKING_STARTPOINTS);
+        u.setKills(0);
+        u.setDeaths(0);
+        u.update(false);
         TabThread.restart();
-        return Util.sendMsg(p, Lang.INFO_RESETED);
+        return Util.sendMessage(p, Lang.INFO_RESETED);
     }
 }

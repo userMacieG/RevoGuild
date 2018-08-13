@@ -13,6 +13,6 @@ public class CombatCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        return Util.sendMsg(p, Lang.INFO_FIGHT_TIME.replace("{TIME}", CombatManager.getTime(p)));
+        return Util.sendMessage(p, Lang.INFO_FIGHT_TIME.replace("{TIME}", CombatManager.getTime(p)));
     }
 }

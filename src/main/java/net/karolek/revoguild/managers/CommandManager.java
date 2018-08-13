@@ -20,7 +20,7 @@ public class CommandManager {
         cmdMap = f.get(Bukkit.getServer().getPluginManager());
     }
 
-    public static void register(Command cmd, String fallback) {
+    private static void register(Command cmd, String fallback) {
         cmdMap.register(fallback, cmd);
         commands.put(cmd.getName(), cmd);
     }

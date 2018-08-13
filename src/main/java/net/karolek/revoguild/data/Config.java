@@ -6,14 +6,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Config {
 
-    private static final String prefix = "config.";
-
     public static boolean ENABLED = false;
-    public static boolean USEUUID = true;
     public static boolean UPDATER = true;
 
     public static String DATABASE_MODE = "sqlite";
@@ -25,7 +23,6 @@ public class Config {
     public static String DATABASE_MYSQL_NAME = "minecraft";
     public static String DATABASE_SQLITE_NAME = "minecraft.db";
 
-    public static String TAG_MODE = "tagapi";
     public static String TAG_FORMAT = "&8[{COLOR}{TAG}&8] {COLOR}";
     public static String TAG_COLOR_NOGUILD = "&7";
     public static String TAG_COLOR_FRIEND = "&a";
@@ -61,11 +58,12 @@ public class Config {
     public static List<String> ESCAPE_DISABLEDCMD_COMMANDS = Arrays.asList("g dom", "dom", "spawn");
     public static boolean ESCAPE_DISABLEDCMD_NOTIFY_ENABLED = false;
     public static String ESCAPE_DISABLEDCMD_NOTIFY_MESSAGE = "&4Blad: &cNie mozesz uzywac tej komendy podczas walki!";
+
     public static String ALGORITHM_RANKING_WIN = "(300 + (({KILLER_POINTS} - {PLAYER_POINTS}) * (-0.2)))";
-    public static String ALGORITHM_RANKING_LOSE = "Math.abs({WIN_POINTS}/2)";
-    public static String ALGORITHM_GUILD_POINTS = "{MEMBERS_POINTS} - ({MEMBERS_NUM}*1000)";
-    public static String ALGORITHM_ENLARGE = "({CUBOID_SIZE} - 24)/5 +1";
-    public static String ALGORITHM_JOIN = "Math.max(1, {MEMBERS_NUM}/2)";
+    public static String ALGORITHM_RANKING_LOSE = "Math.abs({WIN_POINTS} / 2)";
+    public static String ALGORITHM_GUILD_POINTS = "{MEMBERS_POINTS} - ({MEMBERS_NUM} * 1000)";
+    public static String ALGORITHM_ENLARGE = "({CUBOID_SIZE} - 24) / 5 + 1";
+    public static String ALGORITHM_JOIN = "Math.max(1, {MEMBERS_NUM} / 2)";
 
     public static boolean MOVEMENT_NOTIFY_ENABLED = true;
     public static boolean MOVEMENT_NOTIFY_INTRUDER_ENABLED = true;
@@ -76,7 +74,7 @@ public class Config {
     public static boolean ACTIONS_BLOCK_PLACE = false;
     public static boolean ACTIONS_BUCKET_EMPTY = false;
     public static boolean ACTIONS_BUCKET_FILL = false;
-    public static List<Integer> ACTIONS_PROTECTEDID = Arrays.asList(54);
+    public static List<Integer> ACTIONS_PROTECTEDID = Collections.singletonList(54);
 
     public static boolean UPTAKE_ENABLED = false;
     public static int UPTAKE_LIVES_START = 3;
@@ -137,23 +135,22 @@ public class Config {
     public static String TABLIST_FORMAT_PTOP = "{NAME}";
     public static int TABLIST_REFRESH_INTERVAL = 10;
 
-    public static void loadConfig() {
+    private static String prefix = "config.";
+
+    private static void loadConfig() {
         try {
             FileConfiguration c = GuildPlugin.getPlugin().getConfig();
-
             for (Field f : Config.class.getFields()) {
-
-                if (c.isSet(prefix + f.getName().toLowerCase().replace("_", ".")))
+                if (c.isSet(prefix + f.getName().toLowerCase().replace("_", "."))) {
                     f.set(null, c.get(prefix + f.getName().toLowerCase().replace("_", ".")));
-                // System.out.println(f.getName() + " -> " + f.get(null));
-
+                }
             }
         } catch (Exception e) {
             Logger.exception(e);
         }
     }
 
-    public static void saveConfig() {
+    private static void saveConfig() {
         try {
             FileConfiguration c = GuildPlugin.getPlugin().getConfig();
             for (Field f : Config.class.getFields()) {

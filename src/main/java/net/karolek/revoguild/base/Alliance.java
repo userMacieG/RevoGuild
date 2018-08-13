@@ -1,17 +1,12 @@
 package net.karolek.revoguild.base;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.managers.GuildManager;
 import net.karolek.revoguild.store.Entry;
-import net.karolek.revoguild.store.values.Valueable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@Getter
-@Setter
 public class Alliance implements Entry {
 
     private final Guild guild1, guild2;
@@ -28,7 +23,7 @@ public class Alliance implements Entry {
 
     @Override
     public void insert() {
-        GuildPlugin.getStore().update(true, "INSERT INTO `{P}alliances` (`id`,`guild_1`,`guild_2`) VALUES(NULL, '" + guild1.getTag() + "', '" + guild2.getTag() + "')");
+        GuildPlugin.getStore().update(true, "INSERT INTO `{P}alliances` (`id`, `guild_1`, `guild_2`) VALUES(NULL, '" + guild1.getTag() + "', '" + guild2.getTag() + "')");
     }
 
     @Override
@@ -37,14 +32,17 @@ public class Alliance implements Entry {
     }
 
     @Override
-    public void update(Valueable value) {
-    }
-
-
-    @Override
     public void delete() {
         GuildPlugin.getStore().update(true, "DELETE FROM `{P}alliances` WHERE `guild_1` = '" + guild1.getTag() + "' AND `guild_2` ='" + guild2.getTag() + "'");
         GuildPlugin.getStore().update(true, "DELETE FROM `{P}alliances` WHERE `guild_1` = '" + guild2.getTag() + "' AND `guild_2` ='" + guild1.getTag() + "'");
+    }
+
+    public Guild getGuild1() {
+        return guild1;
+    }
+
+    public Guild getGuild2() {
+        return guild2;
     }
 
 }

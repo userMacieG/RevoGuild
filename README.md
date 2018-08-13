@@ -1,19 +1,16 @@
 RevoGuild
 =========
 
-**Propozycje/błędy/bugi: [Issues](https://github.com/EastWestFM/RevoGuild/issues)**
+**Propozycje/błędy/bugi: [Issues](https://github.com/userMacieG/RevoGuild/issues)**
 
-**Download: [Releases](https://github.com/EastWestFM/RevoGuild/releases)**
-
-*W przyszłości bardziej opiszę cały plugin, tymczasem musisz zadowolić się tym opisem. Jeśli będziesz miał jakiś problem pisz na GG: `37846242`*
+**Download: [Releases](https://github.com/userMacieG/RevoGuild/releases)**
 
 Rewolucyjny system gildii na Twój serwer! ;)
 
-#### Konfiguracja (plik config.yml) (ciut nie aktualny :smile:):
+#### Konfiguracja (config.yml):
 ````yaml
 config:
   enabled: false #Aktywnosc pluginu: true/false
-  useuuid: true #Uzywanie UUID jako identyfikatora gracza: true/false (jesli nie korzystasz z wersji powyżej 1.7.9 ustaw false)
   database:
     mode: sqlite #Tryb bazy danych: sqlite/mysql
     tableprefix: ks_
@@ -26,7 +23,6 @@ config:
     sqlite:
       name: minecraft.db
   tag:
-    mode: tagapi #Tryb tagów nad głową: tagapi/scoreboard
     format: '&8[{COLOR}{TAG}&8] {COLOR}' #Format tagu nad głową
     color:
       noguild: '&7' #Brak gildii
@@ -139,51 +135,53 @@ config:
 ````
 
 =======
-#### Konfiguracja tablisty (plik tablist.yml):
+#### Konfiguracja tablisty (tablist.yml):
 ````yaml
 tablist:
   slots:
-    '5': ' &2MC.|&7&lKAROLEK|&8.NET'
-    '13': '  &2|Ranking graczy|'
-    '14': '     &2|INFORMACJE:|'
-    '15': '     &2|Ranking gildii|'
-    '16': '&7|1.&2 |{PTOP-1}'
-    '17': '&7|Godzina: |&2{TIME}'
-    '18': '&7|1.&r&2 |{GTOP-1}'
-    '19': '&7|2.&2 |{PTOP-2}'
-    '20': '&7|Zabojstwa: |&2{KILLS}'
-    '21': '&7|2.&r&2 |{GTOP-2}'
-    '22': '&7|3.&2 |{PTOP-3}'
-    '23': '&7|Smierci: |&2{DEATHS}'
-    '24': '&7|3.&r&2 |{GTOP-3}'
-    '25': '&7|4.&2 |{PTOP-4}'
-    '26': '&7|Punkty: |&2{POINTS}'
-    '27': '&7|4.&r&2 |{GTOP-4}'
-    '28': '&7|5.&2 |{PTOP-5}'
-    '29': '&7|Gildia: |&2{TAG}'
-    '30': '&7|5.&r&2 |{GTOP-5}'
-    '31': '&7|6.&2 |{PTOP-6}'
-    '32': '&7|Ping: |&2{PING}&7 ms'
-    '33': '&7|6.&r&2 |{GTOP-6}'
-    '34': '&7|7.&2 |{PTOP-7}'
-    '35': '&7|Online: |&2{ONLINE}/300'
-    '36': '&7|7.&r&2 |{GTOP-7}'
-    '37': '&7|8.&2 |{PTOP-8}'
-    '39': '&7|8.&r&2 |{GTOP-8}'
-    '40': '&7|9.&2 |{PTOP-9}'
-    '42': '&7|9.&r&2 |{GTOP-9}'
-    '43': '&7|10.&2 |{PTOP-10}'
-    '45': '&7|10.&r&2 |{GTOP-10}'
-    '52': '     &7|Facebook:|'
-    '53': '    &7|TeamSpeak3:|'
-    '54': '     &7|Strona WWW:|'
-    '55': '&2|fb.com/|karolek.net'
-    '56': '    &2|ts.karolek.net|'
-    '57': '&2|http://karolek|.net'
+    '5': '&6&lRevo|&7&lGUILD|'
+    '8': '&7|Online: |&6{ONLINE}&7/&6300'
+    '16': '&6|Ranking graczy:|'
+    '17': '&6|Informacje:|'
+    '18': '&6|Ranking gildii:|'
+    '19': '&7|1.&6 |{PTOP-1}'
+    '20': '&7|Nick: |&6{NAME}'
+    '21': '&7|1.&r&6 |{GTOP-1}'
+    '22': '&7|2.&6 |{PTOP-2}'
+    '23': '&7|Zabojstwa: |&6{KILLS}'
+    '24': '&7|2.&r&6 |{GTOP-2}'
+    '25': '&7|3.&6 |{PTOP-3}'
+    '26': '&7|Smierci: |&6{DEATHS}'
+    '27': '&7|3.&r&6 |{GTOP-3}'
+    '28': '&7|4.&6 |{PTOP-4}'
+    '29': '&7|Pozycja: |&6{POSITION}'
+    '30': '&7|4.&r&6 |{GTOP-4}'
+    '31': '&7|5.&6 |{PTOP-5}'
+    '32': '&7|Punkty: |&6{POINTS}'
+    '33': '&7|5.&r&6 |{GTOP-5}'
+    '34': '&7|6.&6 |{PTOP-6}'
+    '35': '&7|Gildia: |&6{TAG}'
+    '36': '&7|6.&r&6 |{GTOP-6}'
+    '37': '&7|7.&6 |{PTOP-7}'
+    '38': '&7|Ping: |&6{PING}&7ms'
+    '39': '&7|7.&r&6 |{GTOP-7}'
+    '40': '&7|8.&6 |{PTOP-8}'
+    '41': '&7|Godzina: |&6{TIME}'
+    '42': '&7|8.&r&6 |{GTOP-8}'
+    '43': '&7|9.&6 |{PTOP-9}'
+    '45': '&7|9.&r&6 |{GTOP-9}'
+    '46': '&7|10.&6 |{PTOP-10}'
+    '48': '&7|10.&r&6 |{GTOP-10}'
+    '52': '&7|Fanpage:|'
+    '53': '&6|xyz|'
+    '55': '&7|Github:|'
+    '56': '&6http://github.|com/userMacieG/|RevoGuild'
+    '58': '&7|GaduGadu:|'
+    '59': '&6|xyz|'
   update-slots:
-  - 17
-  - 32
-  - 35
+  - 8
+  - 38
+  - 41
 ````
 
 Zapis ` 45: '&7|10.&r&6 |{GTOP-10}'` oznacza, że w 45 slocie zobaczymy właśnie taki tekst. Pustych slotów nie musimy definiować. Jeśli wartość w którymś slocie się powtórzy to dostaniemy crasha.

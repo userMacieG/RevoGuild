@@ -23,13 +23,13 @@ public class GuildCommandsListener implements Listener {
 
         if (!Config.CUBOID_DISABLEDCMD_ENABLED) return;
         if (g == null) return;
-        if (g.isMember(UserManager.getUser(p))) return;
+        if (g.isMember(UserManager.getUser(p).getUuid())) return;
         for (String s : Config.CUBOID_DISABLEDCMD_COMMANDS) {
             if (!msg.contains("/" + s))
                 continue;
             e.setCancelled(true);
             if (Config.CUBOID_DISABLEDCMD_NOTIFY_ENABLED)
-                Util.sendMsg(p, Util.fixColor(Config.CUBOID_DISABLEDCMD_NOTIFY_MESSAGE));
+                Util.sendMessage(p, Util.fixColor(Config.CUBOID_DISABLEDCMD_NOTIFY_MESSAGE));
         }
 
     }

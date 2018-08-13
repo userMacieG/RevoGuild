@@ -14,8 +14,7 @@ public class Updater extends BukkitRunnable {
     @Override
     public void run() {
         try {
-            String url = "https://raw.githubusercontent.com/EastWestFM/RevoGuild/master/version.txt";
-
+            String url = "https://raw.githubusercontent.com/userMacieG/RevoGuild/master/version.txt";
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String version = br.readLine();
@@ -27,12 +26,12 @@ public class Updater extends BukkitRunnable {
                 Logger.info(" > Znaleziono nowa wersje pluginu!", "");
                 Logger.info(" > Zainstalowana wersja: " + myVersion);
                 Logger.info(" > Aktualna wersja: " + version, "");
-                Logger.info(" > Pobierz najnowsza wersje z: https://github.com/EastWestFM/RevoGuild/releases");
+                Logger.info(" > Pobierz najnowsza wersje z: https://github.com/userMacieG/RevoGuild/releases");
                 Logger.info("---------------------------------------");
             }
             conn.disconnect();
         } catch (Exception e) {
-            Logger.warning("Blad podczas sprawdzania aktualizacji");
+            Logger.warning("Blad podczas sprawdzania aktualizacji!");
         }
     }
 }

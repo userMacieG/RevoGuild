@@ -24,7 +24,7 @@ public class TeleportListener implements Listener {
                 return;
             TeleportManager.getTeleports().remove(p.getUniqueId()).cancel();
             p.removePotionEffect(PotionEffectType.CONFUSION);
-            Util.sendMsg(p, Lang.TELEPORT_ERROR);
+            Util.sendMessage(p, Lang.TELEPORT_ERROR);
         }
     }
 
@@ -37,7 +37,7 @@ public class TeleportListener implements Listener {
             return;
         TeleportManager.getTeleports().remove(p.getUniqueId()).cancel();
         p.removePotionEffect(PotionEffectType.CONFUSION);
-        Util.sendMsg(p, Lang.TELEPORT_ERROR);
+        Util.sendMessage(p, Lang.TELEPORT_ERROR);
     }
 
 }

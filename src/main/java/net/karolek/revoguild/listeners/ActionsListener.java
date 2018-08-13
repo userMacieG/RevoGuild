@@ -60,10 +60,10 @@ public class ActionsListener implements Listener {
 
         if (g == null) return;
 
-        if (g.isMember(UserManager.getUser(p))) return;
+        if (g.isMember(UserManager.getUser(p).getUuid())) return;
 
         e.setCancelled(true);
-        Util.sendMsg(p, Lang.ERROR_CANT_USE);
+        Util.sendMessage(p, Lang.ERROR_CANT_USE);
     }
 
     private boolean cancelAction(Player p, Location l, String message) {
@@ -74,10 +74,10 @@ public class ActionsListener implements Listener {
         if (g == null)
             return false;
 
-        if (g.isMember(UserManager.getUser(p)))
+        if (g.isMember(UserManager.getUser(p).getUuid()))
             return false;
 
-        Util.sendMsg(p, message);
+        Util.sendMessage(p, message);
         return true;
     }
 }

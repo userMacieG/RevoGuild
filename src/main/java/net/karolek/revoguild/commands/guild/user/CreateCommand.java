@@ -7,49 +7,49 @@ import net.karolek.revoguild.data.Lang;
 import net.karolek.revoguild.managers.GuildManager;
 import net.karolek.revoguild.utils.ItemUtil;
 import net.karolek.revoguild.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-
 public class CreateCommand extends SubCommand {
 
     public CreateCommand() {
-        super("zaloz", "tworzenie gildii", "/g zaloz  <tag> <nazwa>", "revoguild.create", "nowa", "create");
+        super("zaloz", "tworzenie gildii", "/g zaloz <tag> <nazwa>", "revoguild.create", "nowa", "create");
     }
 
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 2)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         String tag = args[0];
         String name = args[1];
 
         if (GuildManager.getGuild(p) != null)
-            return Util.sendMsg(p, Lang.ERROR_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_HAVE_GUILD);
 
         if ((tag.length() < 2 || tag.length() > 4) || (name.length() < 2 || name.length() > 32))
-            return Util.sendMsg(p, Lang.ERROR_TAG_AND_NAME_FORMAT);
+            return Util.sendMessage(p, Lang.ERROR_TAG_AND_NAME_FORMAT);
 
         if (!Util.isAlphaNumeric(tag) || !Util.isAlphaNumeric(name))
-            return Util.sendMsg(p, Lang.ERROR_TAG_AND_NAME_ALFANUM);
+            return Util.sendMessage(p, Lang.ERROR_TAG_AND_NAME_ALFANUM);
 
         if (GuildManager.getGuild(tag) != null || GuildManager.getGuild(name) != null)
-            return Util.sendMsg(p, Lang.ERROR_GUILD_EXISTS);
+            return Util.sendMessage(p, Lang.ERROR_GUILD_EXISTS);
 
         if (!GuildManager.canCreateGuild(p.getLocation()))
-            return Util.sendMsg(p, Lang.ERROR_NEARBY_IS_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_NEARBY_IS_GUILD);
 
         List<ItemStack> items = ItemUtil.getItems(p.hasPermission("revoguild.vip") ? Config.COST_CREATE_VIP : Config.COST_CREATE_NORMAL, 1);
 
         if (!ItemUtil.checkAndRemove(items, p))
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
 
         Guild g = GuildManager.createGuild(tag, name, p);
 
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_CREATED, g));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_CREATED, g));
     }
 
 }

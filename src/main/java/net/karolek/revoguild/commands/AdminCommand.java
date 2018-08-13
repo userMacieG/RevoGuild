@@ -1,6 +1,5 @@
 package net.karolek.revoguild.commands;
 
-import lombok.Getter;
 import net.karolek.revoguild.commands.guild.GuildAdminCommand;
 import net.karolek.revoguild.commands.ranking.RankingAdminCommand;
 import net.karolek.revoguild.data.Lang;
@@ -12,13 +11,11 @@ import java.util.Arrays;
 
 public class AdminCommand extends SubCommand {
 
-    @Getter
     private static final SubCommand gaCmd = new GuildAdminCommand();
-    @Getter
     private static final SubCommand raCmd = new RankingAdminCommand();
 
     public AdminCommand() {
-        super("admin", "komenda adminsitratora", "/admin <g/r>", "revoguild.admin", "adm", "administrator");
+        super("admin", "komenda administratora", "/admin <g/r>", "revoguild.admin", "adm", "administrator");
         CommandManager.register(gaCmd);
         CommandManager.register(raCmd);
     }
@@ -27,7 +24,7 @@ public class AdminCommand extends SubCommand {
     public boolean onCommand(Player p, String[] args) {
 
         if (args.length == 0)
-            return Util.sendMsg(p, Lang.CMD_MAIN_ADMIN_HELP);
+            return Util.sendMessage(p, Lang.CMD_MAIN_ADMIN_HELP);
 
         String name = args[0];
 
@@ -47,10 +44,10 @@ public class AdminCommand extends SubCommand {
         }
 
         if (sc == null)
-            return Util.sendMsg(p, Lang.CMD_MAIN_ADMIN_HELP);
+            return Util.sendMessage(p, Lang.CMD_MAIN_ADMIN_HELP);
 
         if (!p.hasPermission(sc.getPermission()))
-            return Util.sendMsg(p, "&cYou don't have permissions to run that command! &7(" + sc.getPermission() + ")");
+            return Util.sendMessage(p, "&cYou don't have permissions to run that command! &7(" + sc.getPermission() + ")");
 
         return sc.onCommand(p, Arrays.copyOfRange(args, 1, args.length));
 

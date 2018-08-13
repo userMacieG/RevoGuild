@@ -1,11 +1,8 @@
 package net.karolek.revoguild.base;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.store.Entry;
-import net.karolek.revoguild.store.values.Valueable;
 import net.karolek.revoguild.utils.ItemSerializer;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Bukkit;
@@ -16,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-@Getter
-@Setter
 public class Treasure implements Entry {
 
     private Guild owner;
@@ -33,13 +28,14 @@ public class Treasure implements Entry {
         rs.next();
         this.owner = g;
         ItemStack[] items = ItemSerializer.stringToItems(rs.getString("content"));
-        if (items.length > this.items.length)
+        if (items.length > this.items.length) {
             this.items = Arrays.copyOfRange(items, 0, this.items.length);
-        else
+        } else {
             this.items = items;
+        }
     }
 
-    public String getContent() {
+    private String getContent() {
         return ItemSerializer.itemsToString(this.items);
     }
 
@@ -59,8 +55,28 @@ public class Treasure implements Entry {
         GuildPlugin.getStore().update(true, "DELETE FROM `{P}treasures` WHERE `tag` = '" + this.owner.getTag() + "'");
     }
 
-    @Override
-    public void update(Valueable value) {
+    public Guild getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Guild owner) {
+        this.owner = owner;
+    }
+
+    public Inventory getInv() {
+        return inv;
+    }
+
+    public void setInv(Inventory inv) {
+        this.inv = inv;
+    }
+
+    public ItemStack[] getItems() {
+        return items;
+    }
+
+    public void setItems(ItemStack[] items) {
+        this.items = items;
     }
 
 }

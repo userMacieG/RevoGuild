@@ -10,10 +10,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class CombatTask extends BukkitRunnable {
 
     public void run() {
-        for (Player p : Bukkit.getOnlinePlayers())
-            if (p != null)
-                if (CombatManager.wasInFight(p) && !CombatManager.isInFight(p))
-                    Util.sendMsg(p, Lang.INFO_FIGHT_END);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p != null) {
+                if (CombatManager.wasInFight(p) && CombatManager.isInFight(p)) {
+                    Util.sendMessage(p, Lang.INFO_FIGHT_END);
+                }
+            }
+        }
     }
 
 }

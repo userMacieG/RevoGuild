@@ -42,9 +42,7 @@ public class ItemSerializer {
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object>[] serializeItemStack(ItemStack[] items) {
-
         Map<String, Object>[] result = new Map[items.length];
-
         for (int i = 0; i < items.length; i++) {
             ItemStack is = items[i];
             if (is == null) {
@@ -56,14 +54,12 @@ public class ItemSerializer {
                 }
             }
         }
-
         return result;
     }
 
     @SuppressWarnings("unchecked")
     private static ItemStack[] deserializeItemStack(Map<String, Object>[] map) {
         ItemStack[] items = new ItemStack[map.length];
-
         for (int i = 0; i < items.length; i++) {
             Map<String, Object> s = map[i];
             if (s.size() == 0) {
@@ -84,9 +80,7 @@ public class ItemSerializer {
                     items[i] = null;
                 }
             }
-
         }
-
         return items;
     }
 

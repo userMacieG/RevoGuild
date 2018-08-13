@@ -1,12 +1,11 @@
 package net.karolek.revoguild.packetlistener;
 
-import lombok.Getter;
+import io.netty.channel.*;
 import net.karolek.revoguild.packetlistener.events.PacketReceiveEvent;
 import net.karolek.revoguild.packetlistener.events.PacketSendEvent;
 import net.karolek.revoguild.utils.Reflection;
 import net.karolek.revoguild.utils.Reflection.FieldAccessor;
 import net.karolek.revoguild.utils.Reflection.MethodInvoker;
-import net.minecraft.util.io.netty.channel.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -15,12 +14,12 @@ import java.util.UUID;
 
 public class PacketManager {
 
-    @Getter
-    private static final HashMap<UUID, Channel> channels = new HashMap<UUID, Channel>();
-    private static FieldAccessor<Channel> clientChannel;
-    private static FieldAccessor<Object> playerConnection;
-    private static FieldAccessor<Object> networkManager;
-    private static MethodInvoker handleMethod;
+    private static final HashMap<UUID, Channel> channels = new HashMap<>();
+    private static FieldAccessor<Channel> clientChannel = null;
+    private static FieldAccessor<Object> playerConnection = null;
+    private static FieldAccessor<Object> networkManager = null;
+    private static MethodInvoker handleMethod = null;
+
     static {
         try {
             clientChannel = Reflection.getField(Reflection.getMinecraftClass("NetworkManager"), Channel.class, 0);
@@ -39,11 +38,8 @@ public class PacketManager {
     }
 
     public static void registerPlayer(final Player p) {
-
         Channel c = getChannel(p);
-
         ChannelHandler handler = new ChannelDuplexHandler() {
-
             public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
                 PacketSendEvent event = new PacketSendEvent(msg, p);
                 Bukkit.getPluginManager().callEvent(event);
@@ -59,9 +55,7 @@ public class PacketManager {
                     return;
                 super.channelRead(ctx, event.getPacket());
             }
-
         };
-
         c.pipeline().addBefore("packet_handler", "RevoGuild", handler);
         channels.put(p.getUniqueId(), c);
     }

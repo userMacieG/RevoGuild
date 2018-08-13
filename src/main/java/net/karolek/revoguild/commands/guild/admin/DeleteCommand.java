@@ -5,6 +5,7 @@ import net.karolek.revoguild.commands.SubCommand;
 import net.karolek.revoguild.data.Lang;
 import net.karolek.revoguild.managers.GuildManager;
 import net.karolek.revoguild.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class DeleteCommand extends SubCommand {
@@ -16,14 +17,14 @@ public class DeleteCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         GuildManager.removeGuild(g);
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.ADMIN_BC_GUILD_DELETED, g, p));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.ADMIN_BC_GUILD_DELETED, g, p));
     }
 }

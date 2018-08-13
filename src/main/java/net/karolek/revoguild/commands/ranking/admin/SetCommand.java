@@ -16,37 +16,43 @@ public class SetCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        if (args.length != 3)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
-
-        User u = UserManager.getUserByName(args[0]);
-
-        if (u == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_USER);
-
-        if (!Util.isInteger(args[2]))
-            return Util.sendMsg(p, Lang.ERROR_BAD_INTEGER);
-
-        int value = Integer.parseInt(args[2]);
-
-        if (value < 0)
-            return Util.sendMsg(p, Lang.ERROR_BAD_INTEGER);
-
-        switch (args[1]) {
-            case "kills":
-                u.getKills().set(value);
-                break;
-            case "deaths":
-                u.getDeaths().set(value);
-                break;
-            case "points":
-                u.getPoints().set(value);
-                break;
-            default:
-                return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+        if (args.length != 3) {
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
         }
-
+        User u = UserManager.getUserByName(args[0]);
+        if (u == null) {
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_USER);
+        }
+        if (!Util.isInteger(args[2])) {
+            return Util.sendMessage(p, Lang.ERROR_BAD_INTEGER);
+        }
+        int value = Integer.parseInt(args[2]);
+        if (value < 0) {
+            return Util.sendMessage(p, Lang.ERROR_BAD_INTEGER);
+        }
+        switch (args[1]) {
+            case "points":
+            case "punkty":
+            case "ranking": {
+                u.setPoints(value);
+                break;
+            }
+            case "kills":
+            case "zabicia": {
+                u.setKills(value);
+                break;
+            }
+            case "deaths":
+            case "zgony": {
+                u.setDeaths(value);
+                break;
+            }
+            default: {
+                return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            }
+        }
+        u.update(false);
         TabThread.restart();
-        return Util.sendMsg(p, Lang.INFO_SETTED);
+        return Util.sendMessage(p, Lang.INFO_SETTED);
     }
 }

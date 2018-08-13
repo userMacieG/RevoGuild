@@ -14,26 +14,30 @@ public class CombatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent e) {
-        if (e.isCancelled())
+        if (e.isCancelled()) {
             return;
-        if (!(e.getDamage() > 0))
+        }
+        if (e.getDamage() < 0) {
             return;
-        if (!(e.getEntity() instanceof Player))
+        }
+        if (!(e.getEntity() instanceof Player)) {
             return;
-        if (Util.getDamager(e) == null)
+        }
+        if (Util.getDamager(e) == null) {
             return;
-
+        }
         Player p = (Player) e.getEntity();
         Player d = Util.getDamager(e);
-
-        if(p == d) return;
-
+        if (p == d) {
+            return;
+        }
         if (Config.ESCAPE_ENABLED) {
-            if (!CombatManager.isInFight(p))
-                Util.sendMsg(p, Lang.INFO_FIGHT_START);
-            if (!CombatManager.isInFight(d))
-                Util.sendMsg(d, Lang.INFO_FIGHT_START);
-
+            if (CombatManager.isInFight(p)) {
+                Util.sendMessage(p, Lang.INFO_FIGHT_START);
+            }
+            if (CombatManager.isInFight(d)) {
+                Util.sendMessage(d, Lang.INFO_FIGHT_START);
+            }
             CombatManager.setLastFight(p);
             CombatManager.setLastFight(d);
         }

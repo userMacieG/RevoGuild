@@ -7,6 +7,7 @@ import net.karolek.revoguild.data.Lang;
 import net.karolek.revoguild.managers.GuildManager;
 import net.karolek.revoguild.managers.UserManager;
 import net.karolek.revoguild.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -22,22 +23,22 @@ public class DeleteCommand extends SubCommand {
         final Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isOwner(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
+        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
 
         if (!g.isPreDeleted()) {
             g.setPreDeleted(true);
 
-            Util.sendMsg(p, Lang.INFO_CONFIRM_DELETE);
+            Util.sendMessage(p, Lang.INFO_CONFIRM_DELETE);
 
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
 
-                    if (g != null && g.isPreDeleted())
+                    if (g.isPreDeleted())
                         g.setPreDeleted(false);
 
                 }
@@ -48,7 +49,7 @@ public class DeleteCommand extends SubCommand {
         }
 
         GuildManager.removeGuild(g);
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_DELETED, g));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_DELETED, g));
 
     }
 

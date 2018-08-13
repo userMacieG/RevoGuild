@@ -6,6 +6,7 @@ import net.karolek.revoguild.data.Lang;
 import net.karolek.revoguild.managers.GuildManager;
 import net.karolek.revoguild.utils.Util;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class BanCommand extends SubCommand {
@@ -17,20 +18,20 @@ public class BanCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length < 3)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         long time = Util.parseDateDiff(args[1], true);
         String reason = StringUtils.join(args, " ", 2, args.length);
         String admin = p.getName();
 
         if (!g.ban(admin, reason, time))
-            return Util.sendMsg(p, Lang.ERROR_GUILD_HAVE_BAN);
+            return Util.sendMessage(p, Lang.ERROR_GUILD_HAVE_BAN);
 
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.ADMIN_BC_GUILD_BANNED, g, p));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.ADMIN_BC_GUILD_BANNED, g, p));
     }
 }

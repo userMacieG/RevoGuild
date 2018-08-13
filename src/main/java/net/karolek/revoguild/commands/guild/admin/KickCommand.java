@@ -18,29 +18,29 @@ public class KickCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 2)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         User u = UserManager.getUserByName(args[1]);
 
         if (u == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_USER);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_USER);
 
-        if (!g.isMember(u))
-            return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
+        if (!g.isMember(u.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
 
-        if (g.isOwner(u))
-            return Util.sendMsg(p, Lang.ERROR_CANT_KICK_LEADER_OR_OWNER);
+        if (g.isOwner(u.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_CANT_KICK_LEADER_OR_OWNER);
 
-        if (g.isLeader(u))
-            g.getLeader().set(g.getOwner().get());
+        if (g.isLeader(u.getUuid()))
+            g.setLeader(g.getOwner());
 
-        g.removeMember(u);
+        g.removeMember(u.getUuid());
 
-        return Util.sendMsg(p, Lang.INFO_USER_KICKED);
+        return Util.sendMessage(p, Lang.INFO_USER_KICKED);
     }
 }

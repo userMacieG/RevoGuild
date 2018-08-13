@@ -17,7 +17,7 @@ public class Logger {
             GuildPlugin.getPlugin().getLogger().log(Level.WARNING, s);
     }
 
-    public static void severe(String... logs) {
+    private static void severe(String... logs) {
         for (String s : logs)
             GuildPlugin.getPlugin().getLogger().log(Level.SEVERE, s);
     }
@@ -26,12 +26,13 @@ public class Logger {
         if (cause == null) {
             return;
         }
-        if (cause.getStackTrace() == null)
+        if (cause.getStackTrace() == null) {
             cause.printStackTrace();
+        }
         exception(cause.getMessage(), cause.getStackTrace());
     }
 
-    private static boolean exception(String cause, StackTraceElement[] ste) {
+    private static void exception(String cause, StackTraceElement[] ste) {
         severe("");
         severe("An error occurred while running the plugin");
         severe("");
@@ -44,7 +45,7 @@ public class Logger {
         severe("");
         if ((cause == null) || (ste == null)) {
             severe("Stack trace: no/empty exception given, dumping current stack trace instead!");
-            return true;
+            return;
         }
         severe("Stack trace: ");
         severe("Caused by: " + cause);
@@ -54,7 +55,6 @@ public class Logger {
         severe("");
         severe("End of Error.");
         severe("");
-        return false;
     }
 
 }

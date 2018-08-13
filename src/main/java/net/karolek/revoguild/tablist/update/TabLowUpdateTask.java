@@ -14,8 +14,9 @@ public class TabLowUpdateTask extends BukkitRunnable {
     public void run() {
         for (Entry<Player, Tab> e : TabManager.getTablists().entrySet()) {
             Tab t = e.getValue();
-            for (int i : TabScheme.updateSlots)
+            for (int i : TabScheme.updateSlots) {
                 TabManager.updateSlot(t, i);
+            }
         }
     }
 

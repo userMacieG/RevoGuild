@@ -16,7 +16,7 @@ public class FightCommandsListener implements Listener {
         Player p = e.getPlayer();
         String msg = e.getMessage();
 
-        if (!CombatManager.isInFight(p))
+        if (CombatManager.isInFight(p))
             return;
 
         if (!Config.ESCAPE_DISABLEDCMD_ENABLED)
@@ -27,7 +27,7 @@ public class FightCommandsListener implements Listener {
                 continue;
             e.setCancelled(true);
             if (Config.ESCAPE_DISABLEDCMD_NOTIFY_ENABLED)
-                Util.sendMsg(p, Util.fixColor(Config.ESCAPE_DISABLEDCMD_NOTIFY_MESSAGE));
+                Util.sendMessage(p, Util.fixColor(Config.ESCAPE_DISABLEDCMD_NOTIFY_MESSAGE));
             return;
 
         }

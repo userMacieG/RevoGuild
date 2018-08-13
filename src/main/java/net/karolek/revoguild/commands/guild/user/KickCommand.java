@@ -21,27 +21,27 @@ public class KickCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isLeader(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_LEADER);
+        if (!g.isLeader(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_LEADER);
 
         @SuppressWarnings("deprecation")
         OfflinePlayer op = Bukkit.getOfflinePlayer(args[0]);
         User u = UserManager.getUser(op);
-        if (g.isLeader(u))
-            return Util.sendMsg(p, Lang.ERROR_CANT_KICK_LEADER_OR_OWNER);
+        if (g.isLeader(u.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_CANT_KICK_LEADER_OR_OWNER);
 
-        if (!g.removeMember(u))
-            return Util.sendMsg(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
+        if (!g.removeMember(u.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_PLAYER_ISNT_MEMBER);
 
         NameTagManager.leaveFromGuild(g, op);
 
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_KICKED, g, op));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_KICKED, g, op));
     }
 }

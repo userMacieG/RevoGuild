@@ -11,12 +11,10 @@ import java.util.regex.Pattern;
 
 public final class Reflection {
 
-    private static String OBC_PREFIX = Bukkit.getServer().getClass().getPackage().getName();
-    private static String NMS_PREFIX = OBC_PREFIX.replace("org.bukkit.craftbukkit", "net.minecraft.server");
-    private static String VERSION = OBC_PREFIX.replace("org.bukkit.craftbukkit", "").replace(".", "");
-    private static Pattern MATCH_VARIABLE = Pattern.compile("\\{([^\\}]+)\\}");
-    private Reflection() {
-    }
+    private static final String OBC_PREFIX = Bukkit.getServer().getClass().getPackage().getName();
+    private static final String NMS_PREFIX = OBC_PREFIX.replace("org.bukkit.craftbukkit", "net.minecraft.server");
+    private static final String VERSION = OBC_PREFIX.replace("org.bukkit.craftbukkit", "").replace(".", "");
+    private static final Pattern MATCH_VARIABLE = Pattern.compile("\\{([^\\}]+)\\}");
 
     public static <T> FieldAccessor<T> getSimpleField(Class<?> target, String name) {
         return getField(target, name);
@@ -108,9 +106,9 @@ public final class Reflection {
                 };
             }
         }
-
-        if (target.getSuperclass() != null)
+        if (target.getSuperclass() != null) {
             return getField(target.getSuperclass(), name);
+        }
         throw new IllegalArgumentException("Cannot find field with type");
     }
 
@@ -122,19 +120,16 @@ public final class Reflection {
         return getTypedMethod(clazz, methodName, null, params);
     }
 
-    public static MethodInvoker getTypedMethod(Class<?> clazz, String methodName, Class<?> returnType, Class<?>... params) {
+    private static MethodInvoker getTypedMethod(Class<?> clazz, String methodName, Class<?> returnType, Class<?>... params) {
         for (final Method method : clazz.getDeclaredMethods()) {
             if ((methodName == null || method.getName().equals(methodName)) && (returnType == null) || method.getReturnType().equals(returnType) && Arrays.equals(method.getParameterTypes(), params)) {
 
                 method.setAccessible(true);
-                return new MethodInvoker() {
-                    @Override
-                    public Object invoke(Object target, Object... arguments) {
-                        try {
-                            return method.invoke(target, arguments);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Cannot invoke method " + method, e);
-                        }
+                return (target, arguments) -> {
+                    try {
+                        return method.invoke(target, arguments);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Cannot invoke method " + method, e);
                     }
                 };
             }
@@ -154,14 +149,11 @@ public final class Reflection {
             if (Arrays.equals(constructor.getParameterTypes(), params)) {
 
                 constructor.setAccessible(true);
-                return new ConstructorInvoker() {
-                    @Override
-                    public Object invoke(Object... arguments) {
-                        try {
-                            return constructor.newInstance(arguments);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Cannot invoke constructor " + constructor, e);
-                        }
+                return arguments -> {
+                    try {
+                        return constructor.newInstance(arguments);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Cannot invoke constructor " + constructor, e);
                     }
                 };
             }
@@ -171,11 +163,11 @@ public final class Reflection {
 
     public static Class<Object> getUntypedClass(String lookupName) {
         @SuppressWarnings({"rawtypes", "unchecked"})
-        Class<Object> clazz = (Class<Object>) (Class) getClass(lookupName);
+        Class<Object> clazz = (Class<Object>) getClass(lookupName);
         return clazz;
     }
 
-    public static Class<?> getClass(String lookupName) {
+    private static Class<?> getClass(String lookupName) {
         return getCanonicalClass(expandVariables(lookupName));
     }
 
@@ -198,22 +190,21 @@ public final class Reflection {
     private static String expandVariables(String name) {
         StringBuffer output = new StringBuffer();
         Matcher matcher = MATCH_VARIABLE.matcher(name);
-
         while (matcher.find()) {
             String variable = matcher.group(1);
-            String replacement = "";
-
-            if ("nms".equalsIgnoreCase(variable))
+            String replacement;
+            if ("nms".equalsIgnoreCase(variable)) {
                 replacement = NMS_PREFIX;
-            else if ("obc".equalsIgnoreCase(variable))
+            } else if ("obc".equalsIgnoreCase(variable)) {
                 replacement = OBC_PREFIX;
-            else if ("version".equalsIgnoreCase(variable))
+            } else if ("version".equalsIgnoreCase(variable)) {
                 replacement = VERSION;
-            else
+            } else {
                 throw new IllegalArgumentException("Unknown variable: " + variable);
-
-            if (replacement.length() > 0 && matcher.end() < name.length() && name.charAt(matcher.end()) != '.')
+            }
+            if (replacement.length() > 0 && matcher.end() < name.length() && name.charAt(matcher.end()) != '.') {
                 replacement += ".";
+            }
             matcher.appendReplacement(output, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(output);
@@ -221,23 +212,19 @@ public final class Reflection {
     }
 
     public interface ConstructorInvoker {
-
-        public Object invoke(Object... arguments);
-
+        Object invoke(Object... arguments);
     }
 
     public interface MethodInvoker {
-
-        public Object invoke(Object target, Object... arguments);
-
+        Object invoke(Object target, Object... arguments);
     }
 
     public interface FieldAccessor<T> {
+        T get(Object target);
 
-        public T get(Object target);
+        void set(Object target, Object value);
 
-        public void set(Object target, Object value);
-
-        public boolean hasField(Object target);
+        boolean hasField(Object target);
     }
+
 }

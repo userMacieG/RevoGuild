@@ -16,10 +16,10 @@ public class ListCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        Util.sendMsg(p, Lang.LIST_GUILD_HEADER);
+        Util.sendMessage(p, Lang.LIST_GUILD_HEADER);
         for (Data<Guild> g : TabThread.getInstance().getRankList().getTopGuilds())
-            Util.sendMsg(p, Lang.parse(Lang.LIST_GUILD_ELEMENT, g.getKey()));
-        Util.sendMsg(p, Lang.LIST_GUILD_FOOTER);
+            Util.sendMessage(p, Lang.parse(Lang.LIST_GUILD_ELEMENT, g.getKey()));
+        Util.sendMessage(p, Lang.LIST_GUILD_FOOTER);
         return true;
     }
 }

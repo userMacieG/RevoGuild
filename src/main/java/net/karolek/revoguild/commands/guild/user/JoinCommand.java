@@ -9,6 +9,7 @@ import net.karolek.revoguild.managers.NameTagManager;
 import net.karolek.revoguild.managers.UserManager;
 import net.karolek.revoguild.utils.ItemUtil;
 import net.karolek.revoguild.utils.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,15 +25,15 @@ public class JoinCommand extends SubCommand {
     public boolean onCommand(Player p, String[] args) {
 
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         if (GuildManager.getGuild(p) != null)
-            return Util.sendMsg(p, Lang.ERROR_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_HAVE_GUILD);
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         String algorithm = Config.ALGORITHM_JOIN;
         algorithm = algorithm.replace("{MEMBERS_NUM}", Integer.toString(g.getMembers().size()));
@@ -43,19 +44,19 @@ public class JoinCommand extends SubCommand {
 
 
         if (!ItemUtil.checkItems(items, p))
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
 
-        if (!g.addMember(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_INVITE);
+        if (!g.addMember(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_INVITE);
 
         ItemUtil.removeItems(items, p);
 
-        Util.sendMsg(p, Lang.parse(Lang.INFO_JOINED, g));
+        Util.sendMessage(p, Lang.parse(Lang.INFO_JOINED, g));
 
         NameTagManager.joinToGuild(g, p);
 
 
-        return Util.sendMsg(Util.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_JOINED, g, p));
+        return Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_JOINED, g, p));
 
 
     }

@@ -15,17 +15,16 @@ public class RankingCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        User u = UserManager.getUser(p);
-        if (args.length == 0)
-            return Util.sendMsg(p, Lang.parse(Lang.INFO_PLAYER, u));
-
-        if (args.length == 1) {
-            User o = UserManager.getUserByName(args[0]);
-            if (o == null)
-                return Util.sendMsg(p, Lang.ERROR_CANT_FIND_PLAYER);
-            return Util.sendMsg(p, Lang.parse(Lang.INFO_PLAYER, o));
-
+        User u = null;
+        if (args.length == 0) {
+            u = UserManager.getUser(p);
+        } else if (args.length == 1) {
+            u = UserManager.getUserByName(args[0]);
         }
-        return false;
+        if (u == null) {
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_PLAYER);
+        }
+        Util.sendMessage(p, u.toString());
+        return Util.sendMessage(p, Lang.parse(Lang.INFO_PLAYER, u));
     }
 }

@@ -18,17 +18,17 @@ public class SetCuboidCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(args[0]);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_GUILD);
 
         Location l = p.getLocation();
 
         if (!GuildManager.canCreateGuild(l))
-            return Util.sendMsg(p, Lang.ERROR_CANT_SET_CUBOID);
+            return Util.sendMessage(p, Lang.ERROR_CANT_SET_CUBOID);
 
         Cuboid o = g.getCuboid();
         GuildManager.removeGuildRoom(g);
@@ -39,6 +39,6 @@ public class SetCuboidCommand extends SubCommand {
         g.update(false);
         GuildManager.setGuildRoom(g);
         p.teleport(g.getCuboid().getCenter());
-        return Util.sendMsg(p, Lang.INFO_CUBOID_SET);
+        return Util.sendMessage(p, Lang.INFO_CUBOID_SET);
     }
 }

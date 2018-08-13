@@ -9,8 +9,9 @@ public class RespawnCrystalTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        for (Guild g : GuildManager.getGuilds().values())
+        for (Guild g : GuildManager.getGuilds().values()) {
             UptakeUtil.respawnGuild(g);
+        }
     }
 
 }

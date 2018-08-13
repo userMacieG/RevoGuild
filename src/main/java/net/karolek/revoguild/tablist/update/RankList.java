@@ -1,7 +1,5 @@
 package net.karolek.revoguild.tablist.update;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.karolek.revoguild.base.Guild;
 import net.karolek.revoguild.base.User;
 
@@ -12,10 +10,8 @@ import java.util.List;
 
 public class RankList {
 
-    @Getter
-    private List<Data<User>> topPlayers = Collections.synchronizedList(new ArrayList<Data<User>>());
-    @Getter
-    private List<Data<Guild>> topGuilds = Collections.synchronizedList(new ArrayList<Data<Guild>>());
+    private List<Data<User>> topPlayers = Collections.synchronizedList(new ArrayList<>());
+    private List<Data<Guild>> topGuilds = Collections.synchronizedList(new ArrayList<>());
 
     public void setTopPlayers(Collection<Data<User>> data) {
         topPlayers.clear();
@@ -27,12 +23,37 @@ public class RankList {
         topGuilds.addAll(data);
     }
 
-    @Getter
-    @AllArgsConstructor
+    public List<Data<User>> getTopPlayers() {
+        return topPlayers;
+    }
+
+    public void setTopPlayers(List<Data<User>> topPlayers) {
+        this.topPlayers = topPlayers;
+    }
+
+    public List<Data<Guild>> getTopGuilds() {
+        return topGuilds;
+    }
+
+    public void setTopGuilds(List<Data<Guild>> topGuilds) {
+        this.topGuilds = topGuilds;
+    }
+
     public static class Data<T> {
+        private final T key;
+        private final int points;
 
-        private T key;
-        private int points;
+        public Data(final T key, final int points) {
+            this.key = key;
+            this.points = points;
+        }
 
+        public T getKey() {
+            return this.key;
+        }
+
+        public int getPoints() {
+            return this.points;
+        }
     }
 }

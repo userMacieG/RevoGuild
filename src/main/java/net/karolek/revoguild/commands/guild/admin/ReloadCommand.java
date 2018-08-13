@@ -20,6 +20,6 @@ public class ReloadCommand extends SubCommand {
         Lang.reloadLang();
         TabScheme.reloadTablist();
         TabThread.restart();
-        return Util.sendMsg(p, Lang.INFO_RELOADED);
+        return Util.sendMessage(p, Lang.INFO_RELOADED);
     }
 }

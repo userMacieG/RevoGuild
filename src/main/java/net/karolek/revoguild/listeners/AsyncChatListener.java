@@ -20,35 +20,31 @@ public class AsyncChatListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-
         String format = e.getFormat();
-
         Player p = e.getPlayer();
         User u = UserManager.getUser(p);
-
-        if(u == null) return;
-
+        if (u == null) {
+            return;
+        }
         Guild g = GuildManager.getGuild(p);
-
         String guildTag = g != null ? Lang.parse(Config.CHAT_FORMAT_TAG, g) : "";
-        String rank = Config.CHAT_FORMAT_RANK.replace("{RANK}", Integer.toString(u.getPoints().get()));
-
+        String rank = Config.CHAT_FORMAT_RANK.replace("{RANK}", Integer.toString(u.getPoints()));
         String local = StringUtils.replace(format, "{GUILD}", guildTag);
         local = local.replace("{RANK}", Util.fixColor(rank));
         e.setFormat(local);
         localChat(e);
-
     }
 
     private void localChat(AsyncPlayerChatEvent e) {
-        if (!Config.CHAT_LOCAL_ENABLED)
+        if (!Config.CHAT_LOCAL_ENABLED) {
             return;
+        }
         Player p = e.getPlayer();
         String msg = e.getMessage();
         Guild g = GuildManager.getGuild(p);
         if (msg.startsWith(Config.CHAT_LOCAL_CHAR + Config.CHAT_LOCAL_CHAR)) {
             if (g == null) {
-                Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+                Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
                 e.setCancelled(true);
                 return;
             }
@@ -59,13 +55,13 @@ public class AsyncChatListener implements Listener {
             format = format.replaceFirst(Config.CHAT_LOCAL_CHAR + Config.CHAT_LOCAL_CHAR, "");
             for (Alliance a : AllianceManager.getGuildAlliances(g)) {
                 Guild o = (a.getGuild1().equals(g)) ? a.getGuild2() : a.getGuild1();
-                Util.sendMsg(o.getOnlineMembers(), format);
+                Util.sendMessage(o.getOnlineMembers(), format);
             }
-            Util.sendMsg(g.getOnlineMembers(), format);
+            Util.sendMessage(g.getOnlineMembers(), format);
             e.setCancelled(true);
         } else if (msg.startsWith(Config.CHAT_LOCAL_CHAR)) {
             if (g == null) {
-                Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+                Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
                 e.setCancelled(true);
                 return;
             }
@@ -73,7 +69,7 @@ public class AsyncChatListener implements Listener {
             format = Lang.parse(format, p);
             format = format.replace("{MESSAGE}", ChatColor.stripColor(Util.fixColor(msg)));
             format = format.replaceFirst(Config.CHAT_LOCAL_CHAR, "");
-            Util.sendMsg(g.getOnlineMembers(), format);
+            Util.sendMessage(g.getOnlineMembers(), format);
             e.setCancelled(true);
         }
     }

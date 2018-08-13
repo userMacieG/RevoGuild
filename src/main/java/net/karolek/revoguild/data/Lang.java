@@ -9,6 +9,7 @@ import net.karolek.revoguild.managers.UserManager;
 import net.karolek.revoguild.utils.Logger;
 import net.karolek.revoguild.utils.Util;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,15 +18,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.UUID;
 
 public class Lang {
 
-    private static final String prefix = "lang.";
     public static String CMD_MAIN_HELP = "&7&m----------&r &6RevoGUILD: komendy uzytkownika &7&m----------&r\n  &6/g sojusz <tag/nazwa> &7- zarzadzanie sojuszami gildii\n  &6/g efekt &7- losowanie efektu dla gildii\n  &6/g zaloz <tag> <nazwa> &7- tworzenie gildii\n  &6/g usun &7- usuwanie gildii\n  &6/g powieksz &7- powiekszanie gildii\n  &6/g dom &7- teleport do domu gildii\n  &6/g info <tag/nazwa> &7- podstawowe informacje o gildii\n  &6/g zapros <gracz> &7- zapraszanie graczy do gildii\n  &6/g dolacz <tag/nazwa> &7- dolaczanie do gildii\n  &6/g wyrzuc <gracz> &7- wyrzucanie graczy z gildii\n  &6/g lider <gracz> &7- zmiana lidera gildii\n  &6/g opusc &7- opuszczanie gildii\n  &6/g lista &7- lista wszystkich gildii\n  &6/g zalozyciel <gracz> &7- zmiana zalozyciela gildii\n  &6/g przedluz &7- przedluzanie waznosci gildii\n  &6/g pvp &7- zmiana statusu pvp w gildii\n  &6/g ustawdom &7- ustawianie domu gildii\n  &6/g skarbiec [dodaj <gracz> | usun <gracz> | lista] &7- zarzadzanie skarbcem gildii\n&7&m----------------------------------------------------";
     public static String CMD_MAIN_ADMIN_HELP = "&7&m-------&r &6RevoGUILD: komendy administratora &7&m-------&r\n  &6/admin g &7- administracja gildiami\n  &6/admin r &7- administracja rankingiem\n&7&m----------------------------------------------------";
     public static String CMD_MAIN_ADMIN_GUILD_HELP = "&7&m-------&r &6RevoGUILD: komendy administratora gildii &7&m-------&r\n  &6/ga tp <tag/nazwa> &7- teleport do gildii\n  &6/ga usun <tag/nazwa> &7- usuwanie gildii\n  &6/ga ban <tag/nazwa> <czas> <powod> &7- banowanie gildii\n  &6/ga unban <tag/nazwa> &7- odbanowywanie gildii\n  &6/ga set <tag/nazwa> <leader|owner|lives|pvp|size> <wartosc> &7- zmiana wartosci pola wybranej gildii\n  &6/ga setcuboid <tag/nazwa> &7- zmiana cuboida gildii\n  &6/ga wyrzuc <tag/nazwa> <gracz> &7- wyrzucanie gracza z gildii\n  &6/ga reload &7- przeladowanie plikow konfiguracyjnych\n&7&m----------------------------------------------------";
     public static String CMD_MAIN_ADMIN_RANKING_HELP = "&7&m-------&r &6RevoGUILD: komendy administratora rankingu &7&m-------&r\n  &6/ra reset <gracz> &7- reset rankingu gracza\n  &6/ga set <gracz> <kills|deaths|points> <warotsc> &7- ustawianie wartosci gracza\n&7&m----------------------------------------------------";
     public static String CMD_CORRECT_USAGE = "&6Prawidlowe uzycie: &7{USAGE}&6!";
+
     public static String ERROR_HAVE_GUILD = "&4Blad: &cMasz juz gildie!";
     public static String ERROR_TAG_AND_NAME_FORMAT = "&4Blad: &cTag oraz nazwa musza miec odpowiednia dlugosc!";
     public static String ERROR_TAG_AND_NAME_ALFANUM = "&4Blad: &cTag oraz nazwa musza byc alfanumeryczne! (AZaz09)";
@@ -63,6 +65,7 @@ public class Lang {
     public static String ERROR_GUILD_HAVE_BAN = "&4Blad: &cGildia ma juz bana!";
     public static String ERROR_GUILD_DONT_HAVE_BAN = "&4Blad: &cGildia nie ma bana!";
     public static String ERROR_DONT_HAVE_LUCKY_TO_EFFECT = "&4Blad: &cEfekt nie zostal wylosowany! Nie masz szczescia i straciles itemy! :(";
+
     public static String INFO_CONFIRM_DELETE = "&6Potwierdz usuniecie gildii: &7/g usun&6!";
     public static String INFO_INVITE_SEND = "&6Zaproszenie zostalo wyslane!";
     public static String INFO_INVITE_BACK = "&6Zaproszenie zostalo cofniete!";
@@ -100,19 +103,24 @@ public class Lang {
     public static String INFO_FIGHT_START = "&cJestes w trakcie walki! Nie mozesz sie wylogowac przez 20 sekund!";
     public static String INFO_FIGHT_END = "&aSkonczyles walczyc! Mozesz sie spokojnie wylogowac! ;)";
     public static String INFO_FIGHT_TIME = "&6Mozesz sie wylogowac za &7{TIME}s&6!";
+
     public static String TELEPORT_START = "&6Teleport nastapi za &7{TIME} &6sekund! Prosze sie nie ruszac!";
     public static String TELEPORT_END = "&6Przeteleportowano!";
     public static String TELEPORT_ERROR = "&6Teleport przerwany!";
+
     public static String LIST_GUILD_HEADER = "&7&m--------&r &6Lista wszystkich gildii &7&m--------&r \n  &7&otag - nazwa - zalozyciel";
     public static String LIST_GUILD_ELEMENT = "  &7{TAG} -  {NAME} -  {OWNER}";
     public static String LIST_GUILD_FOOTER = "&7&m----------------------------------";
     public static String LIST_RANKING_HEADER = "&7&m--------&r &6Ranking graczy (TOP 10)&7&m--------&r ";
     public static String LIST_RANKING_ELEMENT = "  &7{POS}. {NAME} - {POINTS}; {KILLS}:{DEATHS}";
     public static String LIST_RANKING_FOOTER = "&7&m----------------------------------";
+
     public static String BAN_KICKED = "&cTwoja gildia zostala zbanowana przez {BANADMIN}!\nPowod: {BANREASON}\nWygasa: {BANTIME}";
+
     public static String ADMIN_BC_GUILD_DELETED = "&4Gildia &7[{TAG}] {NAME}&4 zostala usunieta przez administratora &7{PLAYER}&4!";
     public static String ADMIN_BC_GUILD_BANNED = "&4Gildia &7[{TAG}] {NAME}&4 zostala zbanowana przez administratora &7{PLAYER}&4 z powodu: &7{BANREASON}!";
     public static String ADMIN_BC_GUILD_UNBANNED = "&4Gildia &7[{TAG}] {NAME}&4 zostala odbanowana przez administratora &7{PLAYER}&4!";
+
     public static String BC_GUILD_CREATED = "&6Gildia &7[{TAG}] {NAME}&6 zostala utworzona przez &7{OWNER}&6!";
     public static String BC_GUILD_DELETED = "&6Gildia &7[{TAG}] {NAME}&6 zostala usunieta przez &7{OWNER}!";
     public static String BC_GUILD_JOINED = "&6Gracz &7{PLAYER} &6dolaczyl do gildii &7[{TAG}] {NAME}&6!";
@@ -125,38 +133,35 @@ public class Lang {
     public static String BC_GUILD_ALLIANCE_DELETED = "&6Gildia &7[{TAG}] {NAME}&6 zerwala sojusz z gildia &7[{TAG2}] {NAME2}&6!";
     public static String BC_GUILD_EFFECT = "&6Gildia &7[{TAG}] {NAME}&6 wylosowala efekt &7{EFFECT} ({LEVEL}) &6na okres &7{TIME}&6!";
 
+    private static String prefix = "lang.";
     private static File file = new File(GuildPlugin.getPlugin().getDataFolder(), "lang.yml");
     private static FileConfiguration c = null;
 
-    public static void loadLang() {
+    private static void loadLang() {
         try {
-
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
                 InputStream is = GuildPlugin.getPlugin().getResource(file.getName());
-                if (is != null)
+                if (is != null) {
                     Util.copy(is, file);
+                }
             }
-
             c = YamlConfiguration.loadConfiguration(file);
-
             for (Field f : Lang.class.getFields()) {
-
-                if (c.isSet(prefix + f.getName().toLowerCase().replaceFirst("_", ",").replace(",", ".")))
+                if (c.isSet(prefix + f.getName().toLowerCase().replaceFirst("_", ",").replace(",", "."))) {
                     f.set(null, c.get(prefix + f.getName().toLowerCase().replaceFirst("_", ",").replace(",", ".")));
-                // System.out.println(f.getName() + " -> " + f.get(null));
-
+                }
             }
         } catch (Exception e) {
             Logger.exception(e);
         }
     }
 
-    public static void saveLang() {
+    private static void saveLang() {
         try {
-            for (Field f : Lang.class.getFields())
+            for (Field f : Lang.class.getFields()) {
                 c.set(prefix + f.getName().toLowerCase().replaceFirst("_", ",").replace(",", "."), f.get(null));
-
+            }
             c.save(file);
         } catch (Exception e) {
             Logger.exception(e);
@@ -178,23 +183,21 @@ public class Lang {
 
     public static String parse(String msg, User u) {
         msg = msg.replace("{NAME}", u.getName());
-        msg = msg.replace("{POINTS}", Integer.toString(u.getPoints().get()));
-        msg = msg.replace("{KILLS}", Integer.toString(u.getKills().get()));
-        msg = msg.replace("{DEATHS}", Integer.toString(u.getDeaths().get()));
-        msg = msg.replace("{TIMEPLAY}", Util.secondsToString(u.getTimePlay().get()));
+        msg = msg.replace("{POINTS}", Integer.toString(u.getPoints()));
+        msg = msg.replace("{KILLS}", Integer.toString(u.getKills()));
+        msg = msg.replace("{DEATHS}", Integer.toString(u.getDeaths()));
         msg = msg.replace("{POSITION}", Integer.toString(UserManager.getPosition(u)));
-
         return Util.fixColor(msg);
     }
 
     public static String parse(String msg, Guild g) {
         msg = msg.replace("{TAG}", g.getTag());
         msg = msg.replace("{NAME}", g.getName());
-        msg = msg.replace("{OWNER}", g.getOwner().get().getName());
-        msg = msg.replace("{LEADER}", g.getLeader().get().getName());
-        msg = msg.replace("{CREATETIME}", Util.getDate(g.getCreateTime().get()));
-        msg = msg.replace("{EXPIRETIME}", Util.getDate(g.getExpireTime().get()));
-        msg = msg.replace("{LASTTAKENLIFETIME}", Util.getDate(g.getLastTakenLifeTime().get()));
+        msg = msg.replace("{OWNER}", Bukkit.getOfflinePlayer(g.getOwner()).getName());
+        msg = msg.replace("{LEADER}", Bukkit.getOfflinePlayer(g.getLeader()).getName());
+        msg = msg.replace("{CREATETIME}", Util.getDate(g.getCreateTime()));
+        msg = msg.replace("{EXPIRETIME}", Util.getDate(g.getExpireTime()));
+        msg = msg.replace("{LASTTAKENLIFETIME}", Util.getDate(g.getLastTakenLifeTime()));
         msg = msg.replace("{SIZE}", Integer.toString(g.getCuboid().getSize() * 2 + 1));
         msg = msg.replace("{PVP}", (g.isPvp() ? "tak" : "nie"));
         msg = msg.replace("{MEMBERS}", getMembers(g));
@@ -203,12 +206,11 @@ public class Lang {
         msg = msg.replace("{POINTS}", Integer.toString(g.getPoints()));
         msg = msg.replace("{KILLS}", Integer.toString(g.getKills()));
         msg = msg.replace("{DEATHS}", Integer.toString(g.getDeaths()));
-        msg = msg.replace("{LIVES}", Integer.toString(g.getLives().get()));
+        msg = msg.replace("{LIVES}", Integer.toString(g.getLives()));
         msg = msg.replace("{BANTIME}", Util.getDate(g.getBanTime()));
         msg = msg.replace("{BANADMIN}", g.getBanAdmin());
         msg = msg.replace("{BANREASON}", g.getBanReason());
         msg = msg.replace("{POSITION}", Integer.toString(GuildManager.getPosition(g)));
-
         return Util.fixColor(msg);
     }
 
@@ -222,11 +224,11 @@ public class Lang {
         msg = parse(msg, g);
         msg = msg.replace("{TAG2}", g1.getTag());
         msg = msg.replace("{NAME2}", g1.getName());
-        msg = msg.replace("{OWNER2}", g1.getOwner().get().getName());
-        msg = msg.replace("{LEADER2}", g1.getLeader().get().getName());
-        msg = msg.replace("{CREATETIME2}", Util.getDate(g1.getCreateTime().get()));
-        msg = msg.replace("{EXPIRETIME2}", Util.getDate(g1.getExpireTime().get()));
-        msg = msg.replace("{LASTTAKENLIFETIME2}", Util.getDate(g1.getLastTakenLifeTime().get()));
+        msg = msg.replace("{OWNER2}", Bukkit.getOfflinePlayer(g1.getOwner()).getName());
+        msg = msg.replace("{LEADER2}", Bukkit.getOfflinePlayer(g1.getLeader()).getName());
+        msg = msg.replace("{CREATETIME2}", Util.getDate(g1.getCreateTime()));
+        msg = msg.replace("{EXPIRETIME2}", Util.getDate(g1.getExpireTime()));
+        msg = msg.replace("{LASTTAKENLIFETIME2}", Util.getDate(g1.getLastTakenLifeTime()));
         msg = msg.replace("{SIZE2}", Integer.toString(g1.getCuboid().getSize() * 2 + 1));
         msg = msg.replace("{PVP2}", (g1.isPvp() ? "tak" : "nie"));
         msg = msg.replace("{MEMBERS2}", getMembers(g1));
@@ -235,7 +237,7 @@ public class Lang {
         msg = msg.replace("{POINTS2}", Integer.toString(g1.getPoints()));
         msg = msg.replace("{KILLS2}", Integer.toString(g1.getKills()));
         msg = msg.replace("{DEATHS2}", Integer.toString(g1.getDeaths()));
-        msg = msg.replace("{LIVES2}", Integer.toString(g1.getLives().get()));
+        msg = msg.replace("{LIVES2}", Integer.toString(g1.getLives()));
         msg = msg.replace("{POSITION2}", Integer.toString(GuildManager.getPosition(g1)));
 
         return Util.fixColor(msg);
@@ -252,12 +254,11 @@ public class Lang {
         return Util.fixColor(msg);
     }
 
-    public static String getMembers(Guild g) {
+    private static String getMembers(Guild g) {
         String[] members = new String[g.getMembers().size()];
-
         int i = 0;
-        for (User u : g.getMembers()) {
-            OfflinePlayer op = u.getOfflinePlayer();
+        for (UUID uuid : g.getMembers()) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
             if (op.isOnline()) {
                 members[i] = ChatColor.GREEN + op.getName();
             } else {
@@ -270,10 +271,9 @@ public class Lang {
 
     public static String getTreasureUsers(Guild g) {
         String[] members = new String[g.getMembers().size()];
-
         int i = 0;
-        for (User u : g.getTreasureUsers()) {
-            OfflinePlayer op = u.getOfflinePlayer();
+        for (UUID uuid : g.getTreasureUsers()) {
+            OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
             if (op.isOnline()) {
                 members[i] = ChatColor.GREEN + op.getName();
             } else {

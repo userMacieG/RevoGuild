@@ -15,45 +15,42 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageListener implements Listener {
 
-    @EventHandler(priority= EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDamage(EntityDamageByEntityEvent e) {
-        if (e.isCancelled())
+        if (e.isCancelled()) {
             return;
-        if (!(e.getDamage() > 0))
+        }
+        if (e.getDamage() < 0) {
             return;
-        if (!(e.getEntity() instanceof Player))
+        }
+        if (!(e.getEntity() instanceof Player)) {
             return;
-        if (Util.getDamager(e) == null)
+        }
+        if (Util.getDamager(e) == null) {
             return;
-
+        }
         Player p = (Player) e.getEntity();
         Player d = Util.getDamager(e);
-
-        if(p == d) return;
-
+        if (p == d) {
+            return;
+        }
         Guild pg = GuildManager.getGuild(p);
         Guild dg = GuildManager.getGuild(d);
-
-
         if (dg == null || pg == null) {
             return;
         }
-
         if (dg == pg) {
             if (dg.isPvp()) {
                 e.setDamage(0);
             } else {
                 e.setCancelled(true);
                 ParticleUtil.sendPartileToPlayer(d, ParticleType.HEART, p.getEyeLocation(), 0.25F, 0.25F, 0.25F, 8, 3);
-                Util.sendMsg(d, Lang.ERROR_CANT_ATTACK_PLAYER);
-                return;
+                Util.sendMessage(d, Lang.ERROR_CANT_ATTACK_PLAYER);
             }
         } else if (AllianceManager.hasAlliance(pg, dg)) {
             e.setDamage(0);
-            Util.sendMsg(d, Lang.ERROR_CANT_ATTACK_PLAYER);
+            Util.sendMessage(d, Lang.ERROR_CANT_ATTACK_PLAYER);
         }
-
     }
-
 
 }

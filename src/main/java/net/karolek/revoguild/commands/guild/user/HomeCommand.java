@@ -21,7 +21,7 @@ public class HomeCommand extends SubCommand {
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
         TeleportManager.teleport(p, g.getHome(), Config.TIME_TELEPORT);
         return true;

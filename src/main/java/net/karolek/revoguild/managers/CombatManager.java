@@ -1,6 +1,5 @@
 package net.karolek.revoguild.managers;
 
-import lombok.Getter;
 import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.utils.TimeUtil;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 
 public class CombatManager {
 
-    @Getter
     private static final HashMap<String, Long> combats = new HashMap<>();
 
     public static void createPlayer(Player p) {
@@ -30,24 +28,23 @@ public class CombatManager {
     }
 
     public static boolean isInFight(Player p) {
-        return (System.currentTimeMillis() - combats.get(p.getName()) < TimeUtil.SECOND.getTime(Config.ESCAPE_TIME));
+        return (System.currentTimeMillis() - combats.get(p.getName()) >= TimeUtil.SECOND.getTime(Config.ESCAPE_TIME));
     }
 
     public static boolean wasInFight(Player p) {
         Long time = combats.get(p.getName());
-
-        if(time == null) return false;
-
+        if (time == null) {
+            return false;
+        }
         return (System.currentTimeMillis() - time - 1000L < TimeUtil.SECOND.getTime(Config.ESCAPE_TIME));
     }
 
-    public static long getTimeToEnd(Player p) {
+    private static long getTimeToEnd(Player p) {
         long actual = System.currentTimeMillis();
         Long time = combats.get(p.getName());
         if (time == null || time == 0) return 0;
         long d = actual - time;
         long t = TimeUtil.SECOND.getTime(Config.ESCAPE_TIME) - d;
-
         return t;
     }
 
@@ -55,6 +52,10 @@ public class CombatManager {
         double seconds = getTimeToEnd(p) / 1000.0;
         DecimalFormat df = new DecimalFormat("#.###");
         return df.format(seconds);
+    }
+
+    public static HashMap<String, Long> getCombats() {
+        return combats;
     }
 
 }

@@ -7,13 +7,15 @@ import org.bukkit.entity.Player;
 
 public class ParticleUtil {
 
-    private static ConstructorInvoker c = Reflection.getConstructor(Reflection.getMinecraftClass("PacketPlayOutWorldParticles"), String.class, float.class, float.class, float.class, float.class, float.class, float.class, float.class, int.class);
+    private static final ConstructorInvoker c = Reflection.getConstructor(Reflection.getMinecraftClass("PacketPlayOutWorldParticles"), String.class, float.class, float.class, float.class, float.class, float.class, float.class, float.class, int.class);
 
     public static void sendParticleToLocation(Location loc, ParticleType particle, float xOffset, float yOffset, float zOffset, float speed, int amount) {
         Object packet = c.invoke(particle.getName(), (float) loc.getX(), (float) loc.getY(), (float) loc.getZ(), xOffset, yOffset, zOffset, speed, amount);
-        for (Player p : Bukkit.getOnlinePlayers())
-            if (loc.getWorld().equals(p.getWorld()) && p.getLocation().distance(loc) <= 50)
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (loc.getWorld().equals(p.getWorld()) && p.getLocation().distance(loc) <= 50) {
                 PacketUtil.sendPacket(p, packet);
+            }
+        }
     }
 
     public static void sendPartileToPlayer(Player p, ParticleType particle, Location loc, float xOffset, float yOffset, float zOffset, float speed, int amount) {
@@ -22,7 +24,6 @@ public class ParticleUtil {
     }
 
     public enum ParticleType {
-
         DRIP_WATER("dripWater"),
         DRIP_LAVA("dripLava"),
         SNOW_SHOVEL("snowshovel"),
@@ -57,13 +58,13 @@ public class ParticleUtil {
         FOOTSTEP("footstep"),
         SPLASH("splash");
 
-        private String name;
+        private final String name;
 
-        private ParticleType(String name) {
+        ParticleType(String name) {
             this.name = name;
         }
 
-        public String getName() {
+        String getName() {
             return name;
         }
     }

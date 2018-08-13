@@ -24,10 +24,10 @@ public class EnlargeCommand extends SubCommand {
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isOwner(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_OWNER);
+        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_OWNER);
 
         String algorithm = Config.ALGORITHM_ENLARGE;
         algorithm = algorithm.replace("{CUBOID_SIZE}", Integer.toString(g.getCuboid().getSize()));
@@ -37,13 +37,13 @@ public class EnlargeCommand extends SubCommand {
         List<ItemStack> items = ItemUtil.getItems(p.hasPermission("revoguild.vip") ? Config.COST_ENLARGE_VIP : Config.COST_ENLARGE_NORMAL, modifier);
 
         if (!ItemUtil.checkItems(items, p))
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
 
         if (!g.addSize())
-            return Util.sendMsg(p, Lang.ERROR_MAX_SIZE);
+            return Util.sendMessage(p, Lang.ERROR_MAX_SIZE);
 
         ItemUtil.removeItems(items, p);
 
-        return Util.sendMsg(p, Lang.INFO_RESIZED);
+        return Util.sendMessage(p, Lang.INFO_RESIZED);
     }
 }

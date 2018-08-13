@@ -1,6 +1,5 @@
 package net.karolek.revoguild.commands.guild;
 
-import lombok.Getter;
 import net.karolek.revoguild.commands.SubCommand;
 import net.karolek.revoguild.commands.guild.user.*;
 import net.karolek.revoguild.data.Config;
@@ -15,8 +14,7 @@ import java.util.Set;
 
 public class GuildCommand extends SubCommand {
 
-    @Getter
-    private static final Set<SubCommand> subCommands = new HashSet<SubCommand>();
+    private static final Set<SubCommand> subCommands = new HashSet<>();
 
     public GuildCommand() {
         super("gildia", "glowna komenda systemu gildii", "/g <subkomenda>", "revoguild.main", "gildie", "guild", "g");
@@ -36,7 +34,7 @@ public class GuildCommand extends SubCommand {
         subCommands.add(new SetHomeCommand());
         subCommands.add(new ProlongCommand());
         subCommands.add(new AllianceCommand());
-        if(Config.EFFECTS_ENABLED)
+        if (Config.EFFECTS_ENABLED)
             subCommands.add(new EffectCommand());
 
         if (Config.TREASURE_ENABLED)
@@ -50,17 +48,17 @@ public class GuildCommand extends SubCommand {
     public boolean onCommand(Player p, String[] args) {
 
         if (args.length == 0)
-            return Util.sendMsg(p, Lang.CMD_MAIN_HELP);
+            return Util.sendMessage(p, Lang.CMD_MAIN_HELP);
 
         String name = args[0];
 
         SubCommand sc = getSub(name);
 
         if (sc == null)
-            return Util.sendMsg(p, Lang.CMD_MAIN_HELP);
+            return Util.sendMessage(p, Lang.CMD_MAIN_HELP);
 
         if (!p.hasPermission(sc.getPermission()))
-            return Util.sendMsg(p, "&cYou don't have permissions to run that command! &7(" + sc.getPermission() + ")");
+            return Util.sendMessage(p, "&cYou don't have permissions to run that command! &7(" + sc.getPermission() + ")");
 
         return sc.onCommand(p, Arrays.copyOfRange(args, 1, args.length));
 

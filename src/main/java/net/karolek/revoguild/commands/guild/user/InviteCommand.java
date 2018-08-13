@@ -21,34 +21,31 @@ public class InviteCommand extends SubCommand {
     public boolean onCommand(Player p, String[] args) {
 
         if (args.length != 1)
-            return Util.sendMsg(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
 
         Guild g = GuildManager.getGuild(p);
 
         if (g == null)
-            return Util.sendMsg(p, Lang.ERROR_DONT_HAVE_GUILD);
+            return Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
 
-        if (!g.isLeader(UserManager.getUser(p)))
-            return Util.sendMsg(p, Lang.ERROR_NOT_LEADER);
+        if (!g.isLeader(UserManager.getUser(p).getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_NOT_LEADER);
 
         @SuppressWarnings("deprecation")
         Player o = Bukkit.getPlayer(args[0]);
         User oU = UserManager.getUser(o);
 
-        if (o == null)
-            return Util.sendMsg(p, Lang.ERROR_CANT_FIND_PLAYER);
+        if (g.isMember(oU.getUuid()))
+            return Util.sendMessage(p, Lang.ERROR_PLAYER_IS_MEMBER);
 
-        if (g.isMember(oU))
-            return Util.sendMsg(p, Lang.ERROR_PLAYER_IS_MEMBER);
-
-        if (!g.addInvite(oU)) {
-            g.removeInvite(oU);
-            Util.sendMsg(p, Lang.parse(Lang.INFO_INVITE_BACK, o));
-            return Util.sendMsg(o, Lang.parse(Lang.INFO_INVITE_CANCEL, g));
+        if (!g.addInvite(oU.getUuid())) {
+            g.removeInvite(oU.getUuid());
+            Util.sendMessage(p, Lang.parse(Lang.INFO_INVITE_BACK, o));
+            return Util.sendMessage(o, Lang.parse(Lang.INFO_INVITE_CANCEL, g));
         }
 
-        Util.sendMsg(p, Lang.parse(Lang.INFO_INVITE_SEND, o));
-        return Util.sendMsg(o, Lang.parse(Lang.INFO_INVITE_NEW, g));
+        Util.sendMessage(p, Lang.parse(Lang.INFO_INVITE_SEND, o));
+        return Util.sendMessage(o, Lang.parse(Lang.INFO_INVITE_NEW, g));
 
 
     }
