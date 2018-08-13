@@ -1,13 +1,16 @@
-RevoGuild
+##RevoGuild
+Rewolucyjny system gildii na Twój serwer! ;)
+
 =========
 
 **Propozycje/błędy/bugi: [Issues](https://github.com/userMacieG/RevoGuild/issues)**
 
 **Download: [Releases](https://github.com/userMacieG/RevoGuild/releases)**
 
-Rewolucyjny system gildii na Twój serwer! ;)
+=========
 
-#### Konfiguracja (config.yml):
+#### Konfiguracja:
+(config.yml)
 ````yaml
 config:
   enabled: false #Aktywnosc pluginu: true/false
@@ -133,9 +136,7 @@ config:
       interval: 1 #Czas do odświeżenia wartości pól wyróżnionych w tablist.yml -> update-slots
 
 ````
-
-=======
-#### Konfiguracja tablisty (tablist.yml):
+(tablist.yml)
 ````yaml
 tablist:
   slots:
@@ -189,5 +190,3 @@ Zapis ` 45: '&7|10.&r&6 |{GTOP-10}'` oznacza, że w 45 slocie zobaczymy właśni
 W sekcji `update-slots` wpisujemy ID slotów, które mają być aktualizowane w sposób ciągły (np. czas lub ping). Wszystkie wartości dotyczące rankingu gildii/graczy aktualizowane są wtedy, gdy się zmienią.
 
 `PREFIX|NAME|SUFFIX` - prefix i suffix zmieniają się podczas odświeżania taba, name natomiast jest taki sam i reprezentuje dany team.
-
-=======
