@@ -5,6 +5,8 @@ Rewolucyjny system gildii na Twój serwer! ;)
 
 **Propozycje/błędy/bugi: [Issues](https://github.com/userMacieG/RevoGuild/issues)**
 
+**Kontakt: [Discord](https://forum.cuddi.pl/showthread.php?tid=19)**
+
 **Download: [Releases](https://github.com/userMacieG/RevoGuild/releases)**
 
 =========
