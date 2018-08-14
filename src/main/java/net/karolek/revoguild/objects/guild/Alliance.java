@@ -1,7 +1,7 @@
-package net.karolek.revoguild.base;
+package net.karolek.revoguild.objects.guild;
 
 import net.karolek.revoguild.GuildPlugin;
-import net.karolek.revoguild.managers.GuildManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
 import net.karolek.revoguild.store.Entry;
 
 import java.sql.ResultSet;

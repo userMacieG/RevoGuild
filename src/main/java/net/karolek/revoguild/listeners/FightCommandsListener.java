@@ -19,15 +19,15 @@ public class FightCommandsListener implements Listener {
         if (CombatManager.isInFight(p))
             return;
 
-        if (!Config.ESCAPE_DISABLEDCMD_ENABLED)
+        if (!Config.ESCAPE_DISABLED$COMMANDS_ENABLED)
             return;
 
-        for (String s : Config.ESCAPE_DISABLEDCMD_COMMANDS) {
+        for (String s : Config.ESCAPE_DISABLED$COMMANDS_COMMANDS) {
             if (!msg.contains("/" + s))
                 continue;
             e.setCancelled(true);
-            if (Config.ESCAPE_DISABLEDCMD_NOTIFY_ENABLED)
-                Util.sendMessage(p, Util.fixColor(Config.ESCAPE_DISABLEDCMD_NOTIFY_MESSAGE));
+            if (Config.ESCAPE_DISABLED$COMMANDS_NOTIFY_ENABLED)
+                Util.sendMessage(p, Util.fixColor(Config.ESCAPE_DISABLED$COMMANDS_NOTIFY_MESSAGE));
             return;
 
         }

@@ -1,7 +1,7 @@
 package net.karolek.revoguild.utils;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.managers.GuildManager;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.managers.guild.GuildManager;
 import net.karolek.revoguild.utils.Reflection.ConstructorInvoker;
 import net.karolek.revoguild.utils.Reflection.FieldAccessor;
 import org.bukkit.Bukkit;

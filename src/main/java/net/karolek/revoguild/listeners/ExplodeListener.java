@@ -1,11 +1,11 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
+import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,10 +35,10 @@ public class ExplodeListener implements Listener {
             return;
 
         if (Config.TNT_PROTECTION_ENABLED)
-            if (g.getCreateTime() + TimeUtil.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis())
+            if (g.getCreateTime() + Time.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis())
                 e.setCancelled(true);
 
-        if (!Config.TNT_CANTBUILD_ENABLED)
+        if (!Config.TNT_CANT$BUILD_ENABLED)
             return;
         g.setLastExplodeTime(System.currentTimeMillis());
 
@@ -46,7 +46,7 @@ public class ExplodeListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        if (!Config.TNT_CANTBUILD_ENABLED) {
+        if (!Config.TNT_CANT$BUILD_ENABLED) {
             return;
         }
         Player p = e.getPlayer();
@@ -57,11 +57,11 @@ public class ExplodeListener implements Listener {
         if (!g.isMember(UserManager.getUser(p).getUuid())) {
             return;
         }
-        if (System.currentTimeMillis() - g.getLastExplodeTime() >= TimeUtil.SECOND.getTime(Config.TNT_CANTBUILD_TIME)) {
+        if (System.currentTimeMillis() - g.getLastExplodeTime() >= Time.SECOND.getTime(Config.TNT_CANT$BUILD_TIME)) {
             return;
         }
         e.setCancelled(true);
-        Util.sendMessage(p, Lang.ERROR_EXPLODE_TNT);
+        Util.sendMessage(p, Messages.ERROR_EXPLODE$TNT);
 
     }
 }

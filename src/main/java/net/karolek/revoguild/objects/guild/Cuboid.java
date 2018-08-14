@@ -1,4 +1,4 @@
-package net.karolek.revoguild.base;
+package net.karolek.revoguild.objects.guild;
 
 import net.karolek.revoguild.data.Config;
 import org.bukkit.Bukkit;

@@ -1,7 +1,7 @@
-package net.karolek.revoguild.managers;
+package net.karolek.revoguild.managers.user;
 
 import net.karolek.revoguild.GuildPlugin;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.tablist.update.RankList;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Logger;

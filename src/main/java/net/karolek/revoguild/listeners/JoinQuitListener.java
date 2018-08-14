@@ -1,9 +1,11 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.managers.*;
 import net.karolek.revoguild.packetlistener.PacketManager;
 import net.karolek.revoguild.tablist.update.TabThread;
@@ -56,12 +58,12 @@ public class JoinQuitListener implements Listener {
         }
         User u = UserManager.getUser(p);
         Guild pGuild = GuildManager.getGuild(p);
-        String pGuildTag = pGuild != null ? Lang.parse(Config.CHAT_FORMAT_TAGDEATHMSG, pGuild) : "";
+        String pGuildTag = pGuild != null ? Messages.parse(Config.RANKING_DEATH_TAG, pGuild) : "";
         String mes = Config.ESCAPE_BROADCAST;
         mes = mes.replace("{PGUILD}", pGuildTag);
         mes = mes.replace("{PLAYER}", p.getName());
         u.addDeaths(1);
-        u.removePoints(Config.ESCAPE_POINTSREMOVE);
+        u.removePoints(Config.ESCAPE_LOSE$POINTS);
         p.setHealth(0D);
         TabThread.restart();
         Util.sendMessage(Bukkit.getOnlinePlayers(), mes);

@@ -1,6 +1,6 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.managers.TeleportManager;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Location;
@@ -24,7 +24,7 @@ public class TeleportListener implements Listener {
                 return;
             TeleportManager.getTeleports().remove(p.getUniqueId()).cancel();
             p.removePotionEffect(PotionEffectType.CONFUSION);
-            Util.sendMessage(p, Lang.TELEPORT_ERROR);
+            Util.sendMessage(p, Messages.TELEPORT_CANCELLED);
         }
     }
 
@@ -37,7 +37,7 @@ public class TeleportListener implements Listener {
             return;
         TeleportManager.getTeleports().remove(p.getUniqueId()).cancel();
         p.removePotionEffect(PotionEffectType.CONFUSION);
-        Util.sendMessage(p, Lang.TELEPORT_ERROR);
+        Util.sendMessage(p, Messages.TELEPORT_CANCELLED);
     }
 
 }

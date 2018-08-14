@@ -1,11 +1,11 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
+import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -34,19 +34,19 @@ public class MoveListener implements Listener {
             Guild from = GuildManager.getGuild(e.getFrom());
             Guild to = GuildManager.getGuild(e.getTo());
             if ((from == null) && (to != null)) {
-                Util.sendMessage(p, Lang.parse(Lang.INFO_MOVE_IN, to));
+                Util.sendMessage(p, Messages.parse(Messages.INFO_MOVE_IN, to));
                 if (Config.MOVEMENT_NOTIFY_INTRUDER_ENABLED) {
                     if (to.isMember(UserManager.getUser(e.getPlayer()).getUuid())) {
                         return;
                     }
                     Long time = times.get(to);
-                    if (time == null || System.currentTimeMillis() - time >= TimeUtil.SECOND.getTime(30)) {
-                        Util.sendMessage(to.getOnlineMembers(), Lang.INFO_MOVE_INTRUDER);
+                    if (time == null || System.currentTimeMillis() - time >= Time.SECOND.getTime(30)) {
+                        Util.sendMessage(to.getOnlineMembers(), Messages.INFO_MOVE_INTRUDER);
                         times.put(to, System.currentTimeMillis());
                     }
                 }
             } else if ((from != null) && (to == null)) {
-                Util.sendMessage(p, Lang.parse(Lang.INFO_MOVE_OUT, from));
+                Util.sendMessage(p, Messages.parse(Messages.INFO_MOVE_OUT, from));
             }
 
         }

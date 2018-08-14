@@ -1,13 +1,13 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Alliance;
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.guild.Alliance;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.AllianceManager;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.utils.Util;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
@@ -27,7 +27,7 @@ public class AsyncChatListener implements Listener {
             return;
         }
         Guild g = GuildManager.getGuild(p);
-        String guildTag = g != null ? Lang.parse(Config.CHAT_FORMAT_TAG, g) : "";
+        String guildTag = g != null ? Messages.parse(Config.CHAT_FORMAT_TAG, g) : "";
         String rank = Config.CHAT_FORMAT_RANK.replace("{RANK}", Integer.toString(u.getPoints()));
         String local = StringUtils.replace(format, "{GUILD}", guildTag);
         local = local.replace("{RANK}", Util.fixColor(rank));
@@ -44,13 +44,13 @@ public class AsyncChatListener implements Listener {
         Guild g = GuildManager.getGuild(p);
         if (msg.startsWith(Config.CHAT_LOCAL_CHAR + Config.CHAT_LOCAL_CHAR)) {
             if (g == null) {
-                Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
+                Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
                 e.setCancelled(true);
                 return;
             }
             String format = Config.CHAT_LOCAL_FORMAT_ALLIANCE;
-            format = Lang.parse(format, g);
-            format = Lang.parse(format, p);
+            format = Messages.parse(format, g);
+            format = Messages.parse(format, p);
             format = format.replace("{MESSAGE}", ChatColor.stripColor(Util.fixColor(msg)));
             format = format.replaceFirst(Config.CHAT_LOCAL_CHAR + Config.CHAT_LOCAL_CHAR, "");
             for (Alliance a : AllianceManager.getGuildAlliances(g)) {
@@ -61,12 +61,12 @@ public class AsyncChatListener implements Listener {
             e.setCancelled(true);
         } else if (msg.startsWith(Config.CHAT_LOCAL_CHAR)) {
             if (g == null) {
-                Util.sendMessage(p, Lang.ERROR_DONT_HAVE_GUILD);
+                Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
                 e.setCancelled(true);
                 return;
             }
             String format = Config.CHAT_LOCAL_FORMAT_GUILD;
-            format = Lang.parse(format, p);
+            format = Messages.parse(format, p);
             format = format.replace("{MESSAGE}", ChatColor.stripColor(Util.fixColor(msg)));
             format = format.replaceFirst(Config.CHAT_LOCAL_CHAR, "");
             Util.sendMessage(g.getOnlineMembers(), format);

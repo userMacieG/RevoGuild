@@ -1,4 +1,4 @@
-package net.karolek.revoguild.base;
+package net.karolek.revoguild.objects.user;
 
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.data.Config;
@@ -24,7 +24,7 @@ public class User implements Entry {
         this.name = p.getName();
         this.kills = 0;
         this.deaths = 0;
-        this.points = Config.RANKING_STARTPOINTS;
+        this.points = Config.RANKING_START$POINTS;
         this.insert();
     }
 

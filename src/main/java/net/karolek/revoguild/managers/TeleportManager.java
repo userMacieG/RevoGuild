@@ -1,7 +1,7 @@
 package net.karolek.revoguild.managers;
 
 import net.karolek.revoguild.GuildPlugin;
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public class TeleportManager {
     }
 
     private static void teleportWithDelay(final Player p, final Location loc, int time) {
-        Util.sendMessage(p, Lang.TELEPORT_START.replace("{TIME}", Integer.toString(time)));
+        Util.sendMessage(p, Messages.TELEPORT_START.replace("{TIME}", Integer.toString(time)));
         p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20 * time + 100, 5));
         if (teleports.get(p.getUniqueId()) != null) {
             teleports.remove(p.getUniqueId()).cancel();
@@ -38,7 +38,7 @@ public class TeleportManager {
                 if (p.isOnline()) {
                     p.teleport(loc, PlayerTeleportEvent.TeleportCause.PLUGIN);
                     p.removePotionEffect(PotionEffectType.CONFUSION);
-                    Util.sendMessage(p, Lang.TELEPORT_END);
+                    Util.sendMessage(p, Messages.TELEPORT_END);
                     teleports.remove(p.getUniqueId());
                 }
             }

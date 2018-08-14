@@ -4,7 +4,7 @@ import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.store.Store;
 import net.karolek.revoguild.store.StoreMode;
 import net.karolek.revoguild.utils.Logger;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.utils.enums.Time;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.Connection;
@@ -29,16 +29,13 @@ public class StoreMySQL implements Store {
         this.pass = pass;
         this.name = name;
         this.prefix = prefix;
-
         this.executor = Executors.newSingleThreadExecutor();
-
         this.time = System.currentTimeMillis();
-
         new BukkitRunnable() {
 
             @Override
             public void run() {
-                if (System.currentTimeMillis() - time > TimeUtil.SECOND.getTime(30))
+                if (System.currentTimeMillis() - time > Time.SECOND.getTime(30))
                     update(false, "DO 1");
             }
         }.runTaskTimer(GuildPlugin.getPlugin(), 20 * 30, 20 * 30);

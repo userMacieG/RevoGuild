@@ -1,13 +1,14 @@
-package net.karolek.revoguild.base;
+package net.karolek.revoguild.objects.guild;
 
 import net.karolek.revoguild.GuildPlugin;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.AllianceManager;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.user.UserManager;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.store.Entry;
 import net.karolek.revoguild.tablist.update.TabThread;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -54,8 +55,8 @@ public class Guild implements Entry {
         this.treasure = new Treasure(this);
         this.home = owner.getLocation();
         this.createTime = System.currentTimeMillis();
-        this.expireTime = System.currentTimeMillis() + TimeUtil.DAY.getTime(Config.TIME_START);
-        this.lastExplodeTime = System.currentTimeMillis() - TimeUtil.SECOND.getTime(Config.TNT_CANTBUILD_TIME);
+        this.expireTime = System.currentTimeMillis() + Time.DAY.getTime(Config.TIME_START);
+        this.lastExplodeTime = System.currentTimeMillis() - Time.SECOND.getTime(Config.TNT_CANT$BUILD_TIME);
         this.lastTakenLifeTime = 0L;
         this.lives = Config.UPTAKE_LIVES_START;
         this.pvp = false;
@@ -76,7 +77,7 @@ public class Guild implements Entry {
         this.home = new Location(Bukkit.getWorld(rs.getString("homeWorld")), rs.getInt("homeX"), rs.getInt("homeY"), rs.getInt("homeZ"));
         this.createTime = rs.getLong("createTime");
         this.expireTime = rs.getLong("expireTime");
-        this.lastExplodeTime = System.currentTimeMillis() - TimeUtil.SECOND.getTime(Config.TNT_CANTBUILD_TIME);
+        this.lastExplodeTime = System.currentTimeMillis() - Time.SECOND.getTime(Config.TNT_CANT$BUILD_TIME);
         this.lastTakenLifeTime = rs.getLong("lastTakenLifeTime");
         this.lives = rs.getInt("lives");
         this.pvp = (rs.getInt("pvp") == 1);
@@ -123,7 +124,7 @@ public class Guild implements Entry {
     }
 
     public int getPoints() {
-        String algorithm = Config.ALGORITHM_GUILD_POINTS;
+        String algorithm = Config.ALGORITHM_GUILD$POINTS;
         int points = 0;
         for (UUID uuid : this.members) {
             User u = UserManager.getUser(uuid);
@@ -239,7 +240,7 @@ public class Guild implements Entry {
         this.banTime = time;
         GuildPlugin.getStore().update(false, "UPDATE `{P}guilds` SET `banAdmin` = '" + admin + "', `banTime`='" + time + "',`banReason`='" + reason + "' WHERE `tag` = '" + this.tag + "'");
         for (Player p : getOnlineMembers()) {
-            p.kickPlayer(Lang.parse(Lang.BAN_KICKED, this));
+            p.kickPlayer(Messages.parse(Messages.BAN$REASON, this));
         }
         return true;
     }

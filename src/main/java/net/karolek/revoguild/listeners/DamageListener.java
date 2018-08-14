@@ -1,9 +1,9 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.AllianceManager;
-import net.karolek.revoguild.managers.GuildManager;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
 import net.karolek.revoguild.utils.ParticleUtil;
 import net.karolek.revoguild.utils.ParticleUtil.ParticleType;
 import net.karolek.revoguild.utils.Util;
@@ -45,11 +45,11 @@ public class DamageListener implements Listener {
             } else {
                 e.setCancelled(true);
                 ParticleUtil.sendPartileToPlayer(d, ParticleType.HEART, p.getEyeLocation(), 0.25F, 0.25F, 0.25F, 8, 3);
-                Util.sendMessage(d, Lang.ERROR_CANT_ATTACK_PLAYER);
+                Util.sendMessage(d, Messages.ERROR_CANT_ATTACK$PLAYER);
             }
         } else if (AllianceManager.hasAlliance(pg, dg)) {
             e.setDamage(0);
-            Util.sendMessage(d, Lang.ERROR_CANT_ATTACK_PLAYER);
+            Util.sendMessage(d, Messages.ERROR_CANT_ATTACK$PLAYER);
         }
     }
 

@@ -1,8 +1,10 @@
-package net.karolek.revoguild.managers;
+package net.karolek.revoguild.managers.guild;
 
 import net.karolek.revoguild.GuildPlugin;
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.managers.NameTagManager;
+import net.karolek.revoguild.managers.user.UserManager;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.tablist.update.RankList;
 import net.karolek.revoguild.tablist.update.TabThread;

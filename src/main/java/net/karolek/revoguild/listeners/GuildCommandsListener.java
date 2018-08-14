@@ -1,9 +1,9 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,15 +21,15 @@ public class GuildCommandsListener implements Listener {
         Guild g = GuildManager.getGuild(p.getLocation());
 
 
-        if (!Config.CUBOID_DISABLEDCMD_ENABLED) return;
+        if (!Config.CUBOID_DISABLED$COMMANDS_ENABLED) return;
         if (g == null) return;
         if (g.isMember(UserManager.getUser(p).getUuid())) return;
-        for (String s : Config.CUBOID_DISABLEDCMD_COMMANDS) {
+        for (String s : Config.CUBOID_DISABLED$COMMANDS_COMMANDS) {
             if (!msg.contains("/" + s))
                 continue;
             e.setCancelled(true);
-            if (Config.CUBOID_DISABLEDCMD_NOTIFY_ENABLED)
-                Util.sendMessage(p, Util.fixColor(Config.CUBOID_DISABLEDCMD_NOTIFY_MESSAGE));
+            if (Config.CUBOID_DISABLED$COMMANDS_NOTIFY_ENABLED)
+                Util.sendMessage(p, Util.fixColor(Config.CUBOID_DISABLED$COMMANDS_NOTIFY_MESSAGE));
         }
 
     }

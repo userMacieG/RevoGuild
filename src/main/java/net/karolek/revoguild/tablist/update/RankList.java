@@ -1,7 +1,7 @@
 package net.karolek.revoguild.tablist.update;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.objects.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;

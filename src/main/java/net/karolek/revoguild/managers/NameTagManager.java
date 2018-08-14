@@ -1,8 +1,10 @@
 package net.karolek.revoguild.managers;
 
-import net.karolek.revoguild.base.Guild;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -18,9 +20,9 @@ public class NameTagManager {
         if (g == null) {
             return Util.fixColor(color);
         }
-        String format = Config.TAG_FORMAT;
+        String format = Config.NAME$TAG_FORMAT;
         format = format.replace("{COLOR}", color);
-        format = Lang.parse(format, g);
+        format = Messages.parse(format, g);
         return format;
     }
 
@@ -34,17 +36,17 @@ public class NameTagManager {
                 t = sb.registerNewTeam(o.getTag());
             }
             if (g == null) {
-                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, o));
             } else if (Objects.equals(g.getTag(), o.getTag())) {
                 if (g.isPvp()) {
-                    t.setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, o));
+                    t.setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND$PVP, o));
                 } else {
-                    t.setPrefix(parse(Config.TAG_COLOR_FRIEND, o));
+                    t.setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND, o));
                 }
             } else if (AllianceManager.hasAlliance(o, g)) {
-                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, o));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ALLIANCE, o));
             } else {
-                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, o));
             }
         }
         Team noguild = sb.getTeam("noguild");
@@ -52,7 +54,7 @@ public class NameTagManager {
             noguild = sb.registerNewTeam("noguild");
             noguild.setAllowFriendlyFire(true);
             noguild.setCanSeeFriendlyInvisibles(false);
-            noguild.setPrefix(parse(Config.TAG_COLOR_NOGUILD, null));
+            noguild.setPrefix(parse(Config.NAME$TAG_COLOR_NO$GUILD, null));
         }
         p.setScoreboard(sb);
         for (Player online : Bukkit.getOnlinePlayers()) {
@@ -67,9 +69,9 @@ public class NameTagManager {
             Scoreboard sb = o.getScoreboard();
             Team t = sb.registerNewTeam(g.getTag());
             if (o == p) {
-                t.setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND, g));
             } else {
-                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, g));
             }
             t.addPlayer(p);
         }
@@ -90,9 +92,9 @@ public class NameTagManager {
         for (Player p : g.getOnlineMembers()) {
             Team t = p.getScoreboard().getTeam(g.getTag());
             if (g.isPvp()) {
-                t.setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND$PVP, g));
             } else {
-                t.setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND, g));
             }
         }
     }
@@ -102,9 +104,9 @@ public class NameTagManager {
             o.getScoreboard().getTeam(g.getTag()).addPlayer(p);
         }
         if (g.isPvp()) {
-            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_FRIENDPVP, g));
+            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND$PVP, g));
         } else {
-            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_FRIEND, g));
+            p.getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.NAME$TAG_COLOR_FRIEND, g));
         }
     }
 
@@ -113,7 +115,7 @@ public class NameTagManager {
             o.getScoreboard().getTeam("noguild").addPlayer(p);
         }
         if (p.isOnline()) {
-            p.getPlayer().getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+            p.getPlayer().getScoreboard().getTeam(g.getTag()).setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, g));
         }
     }
 
@@ -121,13 +123,13 @@ public class NameTagManager {
         for (Player p : g.getOnlineMembers()) {
             Team t = p.getScoreboard().getTeam(o.getTag());
             if (t != null) {
-                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, o));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ALLIANCE, o));
             }
         }
         for (Player p : o.getOnlineMembers()) {
             Team t = p.getScoreboard().getTeam(g.getTag());
             if (t != null) {
-                t.setPrefix(parse(Config.TAG_COLOR_ALLIANCE, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ALLIANCE, g));
             }
         }
     }
@@ -136,13 +138,13 @@ public class NameTagManager {
         for (Player p : g.getOnlineMembers()) {
             Team t = p.getScoreboard().getTeam(o.getTag());
             if (t != null) {
-                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, o));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, o));
             }
         }
         for (Player p : o.getOnlineMembers()) {
             Team t = p.getScoreboard().getTeam(g.getTag());
             if (t != null) {
-                t.setPrefix(parse(Config.TAG_COLOR_ENEMY, g));
+                t.setPrefix(parse(Config.NAME$TAG_COLOR_ENEMY, g));
             }
         }
     }

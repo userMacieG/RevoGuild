@@ -2,9 +2,9 @@ package net.karolek.revoguild.commands.guild;
 
 import net.karolek.revoguild.commands.SubCommand;
 import net.karolek.revoguild.commands.guild.user.*;
+import net.karolek.revoguild.data.Commands;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.CommandManager;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
 
@@ -17,7 +17,7 @@ public class GuildCommand extends SubCommand {
     private static final Set<SubCommand> subCommands = new HashSet<>();
 
     public GuildCommand() {
-        super("gildia", "glowna komenda systemu gildii", "/g <subkomenda>", "revoguild.main", "gildie", "guild", "g");
+        super(Commands.GUILD_USER_MAIN_NAME, Commands.GUILD_USER_MAIN_DESCRIPTION, Commands.GUILD_USER_MAIN_USAGE, Commands.GUILD_USER_MAIN_PERMISSION, Commands.GUILD_USER_MAIN_ALIASES);
         subCommands.add(new CreateCommand());
         subCommands.add(new DeleteCommand());
         subCommands.add(new HomeCommand());
@@ -34,40 +34,37 @@ public class GuildCommand extends SubCommand {
         subCommands.add(new SetHomeCommand());
         subCommands.add(new ProlongCommand());
         subCommands.add(new AllianceCommand());
-        if (Config.EFFECTS_ENABLED)
+        if (Config.EFFECTS_ENABLED) {
             subCommands.add(new EffectCommand());
-
-        if (Config.TREASURE_ENABLED)
+        }
+        if (Config.TREASURE_ENABLED) {
             subCommands.add(new TreasureCommand());
-
-        for (SubCommand sc : subCommands)
-            CommandManager.register(sc);
+        }
     }
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-
-        if (args.length == 0)
-            return Util.sendMessage(p, Lang.CMD_MAIN_HELP);
-
+        if (args.length == 0) {
+            return Util.sendMessage(p, Messages.GUILD_USER$HELP);
+        }
         String name = args[0];
-
         SubCommand sc = getSub(name);
-
-        if (sc == null)
-            return Util.sendMessage(p, Lang.CMD_MAIN_HELP);
-
-        if (!p.hasPermission(sc.getPermission()))
+        if (sc == null) {
+            return Util.sendMessage(p, Messages.GUILD_USER$HELP);
+        }
+        if (!p.hasPermission(sc.getPermission())) {
             return Util.sendMessage(p, "&cYou don't have permissions to run that command! &7(" + sc.getPermission() + ")");
-
+        }
         return sc.onCommand(p, Arrays.copyOfRange(args, 1, args.length));
 
     }
 
     private SubCommand getSub(String sub) {
-        for (SubCommand sc : subCommands)
-            if (sc.getName().equalsIgnoreCase(sub) || sc.getAliases().contains(sub))
+        for (SubCommand sc : subCommands) {
+            if (sc.getName().equalsIgnoreCase(sub) || sc.getAliases().contains(sub)) {
                 return sc;
+            }
+        }
         return null;
     }
 

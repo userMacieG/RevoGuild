@@ -1,16 +1,17 @@
 package net.karolek.revoguild.listeners;
 
 import net.karolek.revoguild.GuildPlugin;
-import net.karolek.revoguild.base.Guild;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.AllianceManager;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.packetlistener.events.PacketReceiveEvent;
 import net.karolek.revoguild.utils.*;
 import net.karolek.revoguild.utils.ParticleUtil.ParticleType;
 import net.karolek.revoguild.utils.Reflection.FieldAccessor;
+import net.karolek.revoguild.utils.enums.Time;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -53,8 +54,8 @@ public class PacketReceiveListener implements Listener {
         if (AllianceManager.hasAlliance(g, o)) {
             return;
         }
-        if ((g.getLastTakenLifeTime() + TimeUtil.HOUR.getTime(Config.UPTAKE_LIVES_TIME)) > System.currentTimeMillis()) {
-            Util.sendMessage(p, Lang.ERROR_CANT_TAKE_LIFE);
+        if ((g.getLastTakenLifeTime() + Time.HOUR.getTime(Config.UPTAKE_LIVES_TIME)) > System.currentTimeMillis()) {
+            Util.sendMessage(p, Messages.ERROR_CANT_TAKE$LIFE);
             return;
         }
         if (o.getLives() < Config.UPTAKE_LIVES_MAX) {
@@ -69,7 +70,7 @@ public class PacketReceiveListener implements Listener {
                     GuildManager.removeGuild(g);
                 }
             }.runTask(GuildPlugin.getPlugin());
-            Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_TAKEN, g, o, p));
+            Util.sendMessage(Bukkit.getOnlinePlayers(), Messages.parse(Messages.BROADCAST_GUILD_TAKEN, g, o, p));
             p.playSound(g.getCuboid().getCenter(), Sound.ENDERDRAGON_DEATH, 20, 20);
             for (int i = 0; i < 10; i++) {
                 g.getCuboid().getWorld().strikeLightning(g.getCuboid().getCenter());
@@ -81,7 +82,7 @@ public class PacketReceiveListener implements Listener {
             g.update(false);
             p.playSound(g.getCuboid().getCenter(), Sound.ANVIL_USE, 20, 20);
             ParticleUtil.sendParticleToLocation(l, ParticleType.FLAME, 0.5F, 0.5F, 0.5F, 9, 10);
-            Util.sendMessage(Bukkit.getOnlinePlayers(), Lang.parse(Lang.BC_GUILD_LIFE_TAKEN, g, o, p));
+            Util.sendMessage(Bukkit.getOnlinePlayers(), Messages.parse(Messages.BROADCAST_GUILD_LIFE$TAKEN, g, o, p));
         }
 
     }

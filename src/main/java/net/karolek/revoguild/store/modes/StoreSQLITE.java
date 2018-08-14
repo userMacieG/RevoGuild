@@ -5,8 +5,6 @@ import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.store.Store;
 import net.karolek.revoguild.store.StoreMode;
 import net.karolek.revoguild.utils.Logger;
-import net.karolek.revoguild.utils.TimeUtil;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.sql.Connection;
@@ -28,15 +26,6 @@ public class StoreSQLITE implements Store {
         this.prefix = prefix;
         this.executor = Executors.newSingleThreadExecutor();
         this.time = System.currentTimeMillis();
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if (System.currentTimeMillis() - time > TimeUtil.SECOND.getTime(30))
-                    update(false, "UPDATE `{P}guilds` SET `tag`='KEEP' WHERE `id`='-1'");
-            }
-        }.runTaskTimer(GuildPlugin.getPlugin(), 20 * 30, 20 * 30);
-
     }
 
     @Override
@@ -44,7 +33,7 @@ public class StoreSQLITE implements Store {
         long start = System.currentTimeMillis();
         try {
             Class.forName("org.sqlite.JDBC");
-            this.conn = DriverManager.getConnection("jdbc:sqlite:" + GuildPlugin.getPlugin().getDataFolder() + File.separator + Config.DATABASE_SQLITE_NAME);
+            this.conn = DriverManager.getConnection("jdbc:sqlite:" + GuildPlugin.getPlugin().getDataFolder() + File.separator + Config.STORE_SQLITE_BASE$NAME);
             Logger.info("Connected to the SQLite server!", "Connection ping " + (System.currentTimeMillis() - start) + "ms!");
             return true;
         } catch (ClassNotFoundException e) {
@@ -67,7 +56,6 @@ public class StoreSQLITE implements Store {
                 Logger.exception(e);
             }
         };
-
         if (now) {
             r.run();
         } else {

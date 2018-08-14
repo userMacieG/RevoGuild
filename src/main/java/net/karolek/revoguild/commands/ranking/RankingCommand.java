@@ -1,16 +1,17 @@
 package net.karolek.revoguild.commands.ranking;
 
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.commands.SubCommand;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.data.Commands;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
 
 public class RankingCommand extends SubCommand {
 
     public RankingCommand() {
-        super("ranking", "sprawdzanie rankingu gracza", "/ranking [gracz]", "revoguild.ranking", "elo", "gracz", "points");
+        super(Commands.RANKING_USER_NAME, Commands.RANKING_USER_DESCRIPTION, Commands.RANKING_USER_USAGE, Commands.RANKING_USER_PERMISSION, Commands.RANKING_USER_ALIASES);
     }
 
     @Override
@@ -22,9 +23,8 @@ public class RankingCommand extends SubCommand {
             u = UserManager.getUserByName(args[0]);
         }
         if (u == null) {
-            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_PLAYER);
+            return Util.sendMessage(p, Messages.ERROR_CANT$FIND_PLAYER);
         }
-        Util.sendMessage(p, u.toString());
-        return Util.sendMessage(p, Lang.parse(Lang.INFO_PLAYER, u));
+        return Util.sendMessage(p, Messages.parse(Messages.INFO_RANKING, u));
     }
 }

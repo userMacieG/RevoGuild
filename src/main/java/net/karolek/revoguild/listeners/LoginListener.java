@@ -1,8 +1,8 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.GuildManager;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.guild.GuildManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,7 +19,7 @@ public class LoginListener implements Listener {
         if (!g.isBanned())
             return;
 
-        String kickMsg = Lang.parse(Lang.BAN_KICKED, g);
+        String kickMsg = Messages.parse(Messages.BAN$REASON, g);
 
         e.disallow(Result.KICK_BANNED, kickMsg);
 

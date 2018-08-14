@@ -1,6 +1,6 @@
 package net.karolek.revoguild.tasks;
 
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.managers.CombatManager;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ public class CombatTask extends BukkitRunnable {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p != null) {
                 if (CombatManager.wasInFight(p) && CombatManager.isInFight(p)) {
-                    Util.sendMessage(p, Lang.INFO_FIGHT_END);
+                    Util.sendMessage(p, Messages.INFO_FIGHT_END);
                 }
             }
         }

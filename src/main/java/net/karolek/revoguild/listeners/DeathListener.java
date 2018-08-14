@@ -1,12 +1,12 @@
 package net.karolek.revoguild.listeners;
 
-import net.karolek.revoguild.base.Guild;
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.guild.Guild;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.managers.CombatManager;
-import net.karolek.revoguild.managers.GuildManager;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
@@ -46,9 +46,9 @@ public class DeathListener implements Listener {
         kUser.addPoints(winPoints);
         Guild pGuild = GuildManager.getGuild(p);
         Guild kGuild = GuildManager.getGuild(k);
-        String pGuildTag = pGuild != null ? Lang.parse(Config.CHAT_FORMAT_TAGDEATHMSG, pGuild) : "";
-        String kGuildTag = kGuild != null ? Lang.parse(Config.CHAT_FORMAT_TAGDEATHMSG, kGuild) : "";
-        String mes = Config.RANKING_DEATHMESSAGE;
+        String pGuildTag = pGuild != null ? Messages.parse(Config.RANKING_DEATH_TAG, pGuild) : "";
+        String kGuildTag = kGuild != null ? Messages.parse(Config.RANKING_DEATH_TAG, kGuild) : "";
+        String mes = Config.RANKING_DEATH_MESSAGE;
         mes = mes.replace("{PGUILD}", pGuildTag);
         mes = mes.replace("{PLAYER}", p.getName());
         mes = mes.replace("{LOSEPOINTS}", "-" + Integer.toString(losePoints));

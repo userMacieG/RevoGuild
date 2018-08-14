@@ -1,7 +1,7 @@
 package net.karolek.revoguild.managers;
 
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.utils.enums.Time;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
@@ -28,7 +28,7 @@ public class CombatManager {
     }
 
     public static boolean isInFight(Player p) {
-        return (System.currentTimeMillis() - combats.get(p.getName()) >= TimeUtil.SECOND.getTime(Config.ESCAPE_TIME));
+        return (System.currentTimeMillis() - combats.get(p.getName()) >= Time.SECOND.getTime(Config.ESCAPE_TIME));
     }
 
     public static boolean wasInFight(Player p) {
@@ -36,7 +36,7 @@ public class CombatManager {
         if (time == null) {
             return false;
         }
-        return (System.currentTimeMillis() - time - 1000L < TimeUtil.SECOND.getTime(Config.ESCAPE_TIME));
+        return (System.currentTimeMillis() - time - 1000L < Time.SECOND.getTime(Config.ESCAPE_TIME));
     }
 
     private static long getTimeToEnd(Player p) {
@@ -44,7 +44,7 @@ public class CombatManager {
         Long time = combats.get(p.getName());
         if (time == null || time == 0) return 0;
         long d = actual - time;
-        long t = TimeUtil.SECOND.getTime(Config.ESCAPE_TIME) - d;
+        long t = Time.SECOND.getTime(Config.ESCAPE_TIME) - d;
         return t;
     }
 

@@ -1,20 +1,28 @@
 package net.karolek.revoguild;
 
-import net.karolek.revoguild.commands.AdminCommand;
 import net.karolek.revoguild.commands.CombatCommand;
 import net.karolek.revoguild.commands.RevoGuildCommand;
+import net.karolek.revoguild.commands.SubCommand;
+import net.karolek.revoguild.commands.guild.GuildAdminCommand;
 import net.karolek.revoguild.commands.guild.GuildCommand;
+import net.karolek.revoguild.commands.ranking.RankingAdminCommand;
 import net.karolek.revoguild.commands.ranking.RankingCommand;
 import net.karolek.revoguild.commands.ranking.TopCommand;
+import net.karolek.revoguild.data.Commands;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.data.Lang;
+import net.karolek.revoguild.data.Messages;
 import net.karolek.revoguild.data.TabScheme;
 import net.karolek.revoguild.listeners.*;
 import net.karolek.revoguild.managers.*;
+import net.karolek.revoguild.managers.guild.AllianceManager;
+import net.karolek.revoguild.managers.guild.GuildManager;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.store.Store;
 import net.karolek.revoguild.store.StoreMode;
 import net.karolek.revoguild.store.modes.StoreMySQL;
 import net.karolek.revoguild.store.modes.StoreSQLITE;
+import net.karolek.revoguild.tablist.packets.PacketManager;
+import net.karolek.revoguild.tablist.packets.PacketManagerImpl;
 import net.karolek.revoguild.tablist.update.TabLowUpdateTask;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.tasks.CheckValidityTask;
@@ -23,7 +31,7 @@ import net.karolek.revoguild.tasks.RespawnCrystalTask;
 import net.karolek.revoguild.tasks.Updater;
 import net.karolek.revoguild.utils.BlockUtil;
 import net.karolek.revoguild.utils.Logger;
-import net.karolek.revoguild.utils.TimeUtil;
+import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.UptakeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,9 +43,18 @@ import static net.karolek.revoguild.store.StoreMode.MYSQL;
 public class GuildPlugin extends JavaPlugin {
 
     private static GuildPlugin plugin;
+    private static PacketManager packetManager;
     private static Store store = null;
 
     private boolean enabled = false;
+
+    private static Config revoConfig;
+    private static Messages revoMessages;
+    private static Commands revoCommands;
+
+    public static PacketManager getPacketManager() {
+        return packetManager;
+    }
 
     public static GuildPlugin getPlugin() {
         return plugin;
@@ -47,12 +64,25 @@ public class GuildPlugin extends JavaPlugin {
         return store;
     }
 
+    public static Config getRevoConfig() {
+        return revoConfig;
+    }
+
+    public static Messages getRevoMessages() {
+        return revoMessages;
+    }
+
+    public static Commands getRevoCommands() {
+        return revoCommands;
+    }
+
     @Override
     public void onEnable() {
         plugin = this;
         saveDefaultConfig();
-        Config.reloadConfig();
-        Lang.reloadLang();
+        revoConfig = new Config(this);
+        revoMessages = new Messages(this);
+        revoCommands = new Commands(this);
         TabScheme.reloadTablist();
         if (!Config.ENABLED) {
             Logger.info("This plugin is not activated in the configuration!", "To activate it, set the value 'enabled' to true!", "Plugin will be disabled!");
@@ -105,18 +135,18 @@ public class GuildPlugin extends JavaPlugin {
 
     private boolean registerDatabase() {
         Logger.info("Register database...");
-        switch (StoreMode.getByName(Config.DATABASE_MODE)) {
+        switch (StoreMode.getByName(Config.STORE_TYPE)) {
             case MYSQL: {
-                store = new StoreMySQL(Config.DATABASE_MYSQL_HOST, Config.DATABASE_MYSQL_PORT, Config.DATABASE_MYSQL_USER, Config.DATABASE_MYSQL_PASS, Config.DATABASE_MYSQL_NAME, Config.DATABASE_TABLEPREFIX);
+                store = new StoreMySQL(Config.STORE_MYSQL_HOST, Config.STORE_MYSQL_PORT, Config.STORE_MYSQL_USERNAME, Config.STORE_MYSQL_PASSWORD, Config.STORE_MYSQL_BASE$NAME, Config.STORE_TABLE$PREFIX);
                 break;
             }
             case SQLITE: {
-                store = new StoreSQLITE(Config.DATABASE_SQLITE_NAME, Config.DATABASE_TABLEPREFIX);
+                store = new StoreSQLITE(Config.STORE_SQLITE_BASE$NAME, Config.STORE_TABLE$PREFIX);
                 break;
             }
             default: {
                 Logger.warning("Value of database mode is not valid! Using SQLITE as database!");
-                store = new StoreSQLITE(Config.DATABASE_SQLITE_NAME, Config.DATABASE_TABLEPREFIX);
+                store = new StoreSQLITE(Config.STORE_SQLITE_BASE$NAME, Config.STORE_TABLE$PREFIX);
                 break;
             }
         }
@@ -134,21 +164,22 @@ public class GuildPlugin extends JavaPlugin {
 
     private void registerManagers() {
         Logger.info("Register managers...");
-        CommandManager.enable();
         UserManager.enable();
         GuildManager.enable();
         AllianceManager.enable();
+        packetManager = new PacketManagerImpl();
     }
 
     private void registerCommands() {
         Logger.info("Register commands...");
-        CommandManager.register(new GuildCommand());
-        CommandManager.register(new AdminCommand());
-        CommandManager.register(new RankingCommand());
-        CommandManager.register(new TopCommand());
-        CommandManager.register(new RevoGuildCommand());
+        SubCommand.registerCommand(new GuildCommand());
+        SubCommand.registerCommand(new GuildAdminCommand());
+        SubCommand.registerCommand(new RankingAdminCommand());
+        SubCommand.registerCommand(new RankingCommand());
+        SubCommand.registerCommand(new TopCommand());
+        SubCommand.registerCommand(new RevoGuildCommand());
         if (Config.ESCAPE_ENABLED) {
-            CommandManager.register(new CombatCommand());
+            SubCommand.registerCommand(new CombatCommand());
         }
     }
 
@@ -167,10 +198,10 @@ public class GuildPlugin extends JavaPlugin {
         if (Config.UPTAKE_ENABLED) {
             pm.registerEvents(new PacketReceiveListener(), this);
         }
-        if (Config.ESCAPE_ENABLED && Config.ESCAPE_DISABLEDCMD_ENABLED) {
+        if (Config.ESCAPE_ENABLED && Config.ESCAPE_DISABLED$COMMANDS_ENABLED) {
             pm.registerEvents(new FightCommandsListener(), this);
         }
-        if (Config.CUBOID_DISABLEDCMD_ENABLED) {
+        if (Config.CUBOID_DISABLED$COMMANDS_ENABLED) {
             pm.registerEvents(new GuildCommandsListener(), this);
         }
         if (Config.ESCAPE_ENABLED) {
@@ -183,14 +214,14 @@ public class GuildPlugin extends JavaPlugin {
 
     private void registerTasks() {
         Logger.info("Register tasks...");
-        new CheckValidityTask().runTaskTimerAsynchronously(this, TimeUtil.HOUR.getTick(3), TimeUtil.HOUR.getTick(Config.TIME_CHECK));
-        new TabLowUpdateTask().runTaskTimerAsynchronously(this, 20L, TimeUtil.SECOND.getTick(Config.TABLIST_REFRESH_INTERVAL));
-        new RespawnCrystalTask().runTaskTimerAsynchronously(this, 20L, TimeUtil.SECOND.getTick(60));
+        new CheckValidityTask().runTaskTimerAsynchronously(this, Time.HOUR.getTick(3), Time.HOUR.getTick(Config.TIME_CHECK));
+        new TabLowUpdateTask().runTaskTimerAsynchronously(this, 20L, Time.SECOND.getTick(Config.TABLIST_REFRESH_INTERVAL));
+        new RespawnCrystalTask().runTaskTimerAsynchronously(this, 20L, Time.SECOND.getTick(60));
         if (Config.ESCAPE_ENABLED) {
-            new CombatTask().runTaskTimerAsynchronously(this, 40L, TimeUtil.SECOND.getTick(1));
+            new CombatTask().runTaskTimerAsynchronously(this, 40L, Time.SECOND.getTick(1));
         }
         if (Config.UPDATER) {
-            new Updater().runTaskTimerAsynchronously(this, 20L, TimeUtil.MINUTE.getTick(5));
+            new Updater().runTaskTimerAsynchronously(this, 20L, Time.MINUTE.getTick(5));
         }
         new TabThread();
     }

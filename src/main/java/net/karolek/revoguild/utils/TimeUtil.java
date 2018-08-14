@@ -1,41 +1,43 @@
 package net.karolek.revoguild.utils;
 
-public enum TimeUtil {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    TICK(50, 50),
-    MILLISECOND(1, 1),
-    SECOND(1_000, 1_000),
-    MINUTE(60_000, 60),
-    HOUR(3_600_000, 60),
-    DAY(86_400_000, 24),
-    WEEK(604_800_000, 7);
+public final class TimeUtil {
 
-    private static final int MPT = 50;
-    private final int time, timeMulti;
+    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    private static final LinkedHashMap<Integer, String> values = new LinkedHashMap(6);
 
-    TimeUtil(final int time, final int timeMulti) {
-        this.time = time;
-        this.timeMulti = timeMulti;
+    static {
+        values.put(31104000, "y");
+        values.put(2592000, "msc");
+        values.put(86400, "d");
+        values.put(3600, "h");
+        values.put(60, "min");
+        values.put(1, "s");
     }
 
-    public int getMulti() {
-        return this.timeMulti;
+    public static String formatTime(long value) {
+        return timeFormat.format(new Date(value));
     }
 
-    public int getTime() {
-        return this.time;
+    public static String formatTime(Date date) {
+        return timeFormat.format(date);
     }
 
-    private int getTick() {
-        return this.time / MPT;
-    }
-
-    public int getTime(final int multi) {
-        return this.time * multi;
-    }
-
-    public int getTick(final int multi) {
-        return this.getTick() * multi;
+    public static String secondsToString(int seconds) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Integer, String> e : values.entrySet()) {
+            int iDiv = seconds / e.getKey();
+            if (iDiv >= 1) {
+                int x = (int) Math.floor(iDiv);
+                sb.append(x + e.getValue()).append(" ");
+                seconds -= x * e.getKey();
+            }
+        }
+        return sb.toString();
     }
 
 }

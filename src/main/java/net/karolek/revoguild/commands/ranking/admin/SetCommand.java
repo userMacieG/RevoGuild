@@ -1,9 +1,10 @@
 package net.karolek.revoguild.commands.ranking.admin;
 
-import net.karolek.revoguild.base.User;
+import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.commands.SubCommand;
-import net.karolek.revoguild.data.Lang;
-import net.karolek.revoguild.managers.UserManager;
+import net.karolek.revoguild.data.Commands;
+import net.karolek.revoguild.data.Messages;
+import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
@@ -11,24 +12,24 @@ import org.bukkit.entity.Player;
 public class SetCommand extends SubCommand {
 
     public SetCommand() {
-        super("set", "ustawianie wartosci wybranego gracza", "/ra set <gracz> <kills|deaths|points> <wartosc>", "revoguild.admin.set", "ustaw");
+        super(Commands.RANKING_ADMIN_SET_NAME, Commands.RANKING_ADMIN_SET_DESCRIPTION, Commands.RANKING_ADMIN_SET_USAGE, Commands.RANKING_ADMIN_SET_PERMISSION, Commands.RANKING_ADMIN_SET_ALIASES);
     }
 
     @Override
     public boolean onCommand(Player p, String[] args) {
         if (args.length != 3) {
-            return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+            return Util.sendMessage(p, Messages.parse(Messages.COMMANDS_NO$ENOUGH$ARGS, this));
         }
         User u = UserManager.getUserByName(args[0]);
         if (u == null) {
-            return Util.sendMessage(p, Lang.ERROR_CANT_FIND_USER);
+            return Util.sendMessage(p, Messages.ERROR_CANT$FIND_USER);
         }
         if (!Util.isInteger(args[2])) {
-            return Util.sendMessage(p, Lang.ERROR_BAD_INTEGER);
+            return Util.sendMessage(p, Messages.ERROR_BAD$INTEGER);
         }
         int value = Integer.parseInt(args[2]);
         if (value < 0) {
-            return Util.sendMessage(p, Lang.ERROR_BAD_INTEGER);
+            return Util.sendMessage(p, Messages.ERROR_BAD$INTEGER);
         }
         switch (args[1]) {
             case "points":
@@ -48,11 +49,11 @@ public class SetCommand extends SubCommand {
                 break;
             }
             default: {
-                return Util.sendMessage(p, Lang.parse(Lang.CMD_CORRECT_USAGE, this));
+                return Util.sendMessage(p, Messages.parse(Messages.COMMANDS_NO$ENOUGH$ARGS, this));
             }
         }
         u.update(false);
         TabThread.restart();
-        return Util.sendMessage(p, Lang.INFO_SETTED);
+        return Util.sendMessage(p, Messages.INFO_SETTED);
     }
 }
