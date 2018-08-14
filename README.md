@@ -546,9 +546,3 @@ commands:
     - topka
     - top10
 ````
-
-Zapis ` 45: '&7|10.&r&6 |{GTOP-10}'` oznacza, że w 45 slocie zobaczymy właśnie taki tekst. Pustych slotów nie musimy definiować. Jeśli wartość w którymś slocie się powtórzy to dostaniemy crasha.
-
-W sekcji `update-slots` wpisujemy ID slotów, które mają być aktualizowane w sposób ciągły (np. czas lub ping). Wszystkie wartości dotyczące rankingu gildii/graczy aktualizowane są wtedy, gdy się zmienią.
-
-`PREFIX|NAME|SUFFIX` - prefix i suffix zmieniają się podczas odświeżania taba, name natomiast jest taki sam i reprezentuje dany team.
