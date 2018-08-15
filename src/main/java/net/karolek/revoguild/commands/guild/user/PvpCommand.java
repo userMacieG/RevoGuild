@@ -19,21 +19,18 @@ public class PvpCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         Guild g = GuildManager.getGuild(p);
-
-        if (g == null)
+        if (g == null) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
-
-        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+        }
+        if (!g.isOwner(UserManager.getUser(p).getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_YOU$ARENT$OWNER);
-
+        }
         g.setPvp(!g.isPvp());
         g.update(false);
-
-        for (Player o : g.getOnlineMembers())
+        for (Player o : g.getOnlineMembers()) {
             Util.sendMessage(o, g.isPvp() ? Messages.INFO_PVP_ON : Messages.INFO_PVP_OFF);
-
+        }
         NameTagManager.setPvp(g);
-
         return true;
     }
 }

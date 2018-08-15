@@ -18,8 +18,12 @@ public class RankingAdminCommand extends SubCommand {
 
     public RankingAdminCommand() {
         super(Commands.RANKING_ADMIN_MAIN_NAME, Commands.RANKING_ADMIN_MAIN_DESCRIPTION, Commands.RANKING_ADMIN_MAIN_USAGE, Commands.RANKING_ADMIN_MAIN_PERMISSION, Commands.RANKING_ADMIN_MAIN_ALIASES);
-        subCommands.add(new ResetCommand());
-        subCommands.add(new SetCommand());
+        if (Commands.RANKING_ADMIN_RESET_ENABLED) {
+            subCommands.add(new ResetCommand());
+        }
+        if (Commands.RANKING_ADMIN_SET_ENABLED) {
+            subCommands.add(new SetCommand());
+        }
     }
 
     @Override

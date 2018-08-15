@@ -20,28 +20,21 @@ public class ExplodeListener implements Listener {
 
     private static final Calendar calendar = new GregorianCalendar();
 
-    @SuppressWarnings("deprecation")
     @EventHandler
     public void onExplode(EntityExplodeEvent e) {
-
-        if (Config.TNT_OFF_ENABLED) {
-            if (Config.TNT_OFF_HOURS.contains(calendar.getTime().getHours()))
-                e.setCancelled(true);
-        }
-
         Guild g = GuildManager.getGuild(e.getEntity().getLocation());
-
-        if (g == null)
+        if (g == null) {
             return;
-
-        if (Config.TNT_PROTECTION_ENABLED)
-            if (g.getCreateTime() + Time.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis())
+        }
+        if (Config.TNT_PROTECTION_ENABLED) {
+            if (g.getCreateTime() + Time.DAY.getTime(Config.TNT_PROTECTION_TIME) < System.currentTimeMillis()) {
                 e.setCancelled(true);
-
-        if (!Config.TNT_CANT$BUILD_ENABLED)
+            }
+        }
+        if (!Config.TNT_CANT$BUILD_ENABLED) {
             return;
+        }
         g.setLastExplodeTime(System.currentTimeMillis());
-
     }
 
     @EventHandler

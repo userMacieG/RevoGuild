@@ -24,6 +24,8 @@ public class Messages extends Configuration {
     public static List<String> GUILD_USER$HELP = Arrays.asList("&7&m----------&r &6RevoGUILD: komendy uzytkownika &7&m----------&r", "  &6/g sojusz <tag/nazwa> &7- zarzadzanie sojuszami gildii", "  &6/g efekt &7- losowanie efektu dla gildii", "  &6/g zaloz <tag> <nazwa> &7- tworzenie gildii", "  &6/g usun &7- usuwanie gildii", "  &6/g powieksz &7- powiekszanie gildii", "  &6/g dom &7- teleport do domu gildii", "  &6/g info <tag/nazwa> &7- podstawowe informacje o gildii", "  &6/g zapros <gracz> &7- zapraszanie graczy do gildii", "  &6/g dolacz <tag/nazwa> &7- dolaczanie do gildii", "  &6/g wyrzuc <gracz> &7- wyrzucanie graczy z gildii", "  &6/g lider <gracz> &7- zmiana lidera gildii", "  &6/g opusc &7- opuszczanie gildii", "  &6/g lista &7- lista wszystkich gildii", "  &6/g zalozyciel <gracz> &7- zmiana zalozyciela gildii", "  &6/g przedluz &7- przedluzanie waznosci gildii", "  &6/g pvp &7- zmiana statusu pvp w gildii", "  &6/g ustawdom &7- ustawianie domu gildii", "  &6/g skarbiec [dodaj <gracz> | usun <gracz> | lista] &7- zarzadzanie skarbcem gildii", "&7&m----------------------------------------------------");
     public static List<String> GUILD_ADMIN$HELP = Arrays.asList("&7&m-------&r &6RevoGUILD: komendy administratora gildii &7&m-------&r", "  &6/ga tp <tag/nazwa> &7- teleport do gildii", "  &6/ga usun <tag/nazwa> &7- usuwanie gildii", "  &6/ga ban <tag/nazwa> <czas> <powod> &7- banowanie gildii", "  &6/ga unban <tag/nazwa> &7- odbanowywanie gildii", "  &6/ga set <tag/nazwa> <leader|owner|lives|pvp|size> <wartosc> &7- zmiana wartosci pola wybranej gildii", "  &6/ga setcuboid <tag/nazwa> &7- zmiana cuboida gildii", "  &6/ga wyrzuc <tag/nazwa> <gracz> &7- wyrzucanie gracza z gildii", "  &6/ga reload &7- przeladowanie plikow konfiguracyjnych", "&7&m----------------------------------------------------");
 
+    public static List<String> GUILD_USER$ITEMS$HELP = Arrays.asList("&6Przedmioty do akcji w gildii:", " &8&m-- &6zalozenie gildii: ", "&7{CREATE}", " &8&m-- &6dolaczenie do gildii: ", "&7{JOIN}", " &8&m-- &6zmiana lidera fildii: ", "&7{LEADER}", " &8&m-- &6zmiana zalozyciela gildii: ", "&7{OWNER}", " &8&m-- &6powiekszenie terenu gildii: ", "&7{ENLARGE}", " &8&m-- &6przedluzanie waznosci gildii: ", "&7{PROLONG}", " &8&m-- &6efekt dla gildii: ", "&7{EFFECT}", " &8&m-- &6sojusz gildii: ", "&7{ALLIANCE}");
+
     public static List<String> RANKING$ADMIN$HELP = Arrays.asList("&7&m-------&r &6RevoGUILD: komendy administratora rankingu &7&m-------&r", "  &6/ra reset <gracz> &7- reset rankingu gracza", "  &6/ra set <gracz> <kills|deaths|points> <warotsc> &7- ustawianie wartosci gracza", "&7&m----------------------------------------------------");
 
     public static String COMBAT$INFO = "&6Mozesz sie wylogowac za &7{TIME}s&6!";
@@ -71,6 +73,7 @@ public class Messages extends Configuration {
     public static String ERROR_GUILD_HAVE$BAN = "&4Blad: &cGildia ma juz bana!";
     public static String ERROR_GUILD_DONT$HAVE$BAN = "&4Blad: &cGildia nie ma bana!";
     public static String ERROR_NO$EFFECTS$TO$ROLL = "&4Blad: &cW puli nie ma efektow do wylosowania!";
+    public static String ERROR_GUILD_IS$FULL = "&4Blad: &cTwoja gildia ma juz maksymalna ilosc czlonkow! (30 osob)";
 
     public static String INFO_CONFIRM$DELETE = "&6Potwierdz usuniecie gildii: &7/g usun&6!";
     public static String INFO_INVITE_SEND = "&6Zaproszenie zostalo wyslane!";
@@ -86,8 +89,14 @@ public class Messages extends Configuration {
     public static String INFO_PVP_ON = "&6PVP w gildii zostalo wlaczone!";
     public static String INFO_PVP_OFF = "&6PVP w gildii zostalo wylaczone!";
     public static String INFO_SET_HOME = "&6Dom zostal ustawiony!";
-    public static String INFO_MOVE_IN = "&6Wkroczyles na teren gildii &7[{TAG}] {NAME}&6!";
-    public static String INFO_MOVE_OUT = "&6Opusciles teren gildii &7[{TAG}] {NAME}&6!";
+
+    public static String INFO_GUILD_MOVE_IN = "&aWkroczyles na teren swojej gildii &7[{TAG}] {NAME}&a!";
+    public static String INFO_GUILD_MOVE_OUT = "&aOpusciles teren swojej gildii &7[{TAG}] {NAME}&a!";
+    public static String INFO_GUILD$ALLIANCE_MOVE_IN = "&6Wkroczyles na teren sojuszniczej gildii &7[{TAG}] {NAME}&6!";
+    public static String INFO_GUILD$ALLIANCE_MOVE_OUT = "&6Opusciles teren sojuszniczej gildii &7[{TAG}] {NAME}&6!";
+    public static String INFO_GUILD$ENEMY_MOVE_IN = "&cWkroczyles na teren wrogiej gildii &7[{TAG}] {NAME}&c!";
+    public static String INFO_GUILD$ENEMY_MOVE_OUT = "&cOpusciles teren wrogiej gildii &7[{TAG}] {NAME}&c!";
+
     public static String INFO_MOVE_INTRUDER = "&4Intruz na terenie Twojej gildii!";
     public static List<String> INFO_GUILD = Arrays.asList("&7&m---------&r &7Gildia &6[{TAG}] {NAME} &7&m---------&r", "  &6Zalozyciel: &7{OWNER}", "  &6Lider: &7{LEADER}", "  &6Utworzona: &7{CREATETIME}", "  &6Wygasa: &7{EXPIRETIME}", "  &6Ostatni atak: &7{LASTTAKENLIFETIME}", "  &6Zgony: &7{DEATHS}", "  &6Zabicia: &7{KILLS}", "  &6Punkty: &7{POINTS}", "  &6Pvp: &7{PVP}", "  &6Zycia: &7{LIVES}", "  &6Rozmiar: &7{SIZE}x{SIZE}", "  &6Czlonkow: &7{MEMBERSNUM}, online: {ONLINENUM}", "  &6Czlonkowie: &7{MEMBERS}", "");
     public static List<String> INFO_RANKING = Arrays.asList("&7&m---------&r &7Gracz &6{NAME} &7&m---------&r", "  &6Punkty: &7{POINTS}", "  &6Zabicia: &7{KILLS}", "  &6Zgony: &7{DEATHS}", "  &6Pozycja: &7{POSITION}");

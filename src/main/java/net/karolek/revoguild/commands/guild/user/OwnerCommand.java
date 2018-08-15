@@ -34,7 +34,6 @@ public class OwnerCommand extends SubCommand {
         if (!g.isOwner(UserManager.getUser(p).getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_YOU$ARENT$OWNER);
         }
-        @SuppressWarnings("deprecation")
         Player o = Bukkit.getPlayer(args[0]);
         User u = UserManager.getUser(o);
         if (!g.isMember(u.getUuid())) {
@@ -45,6 +44,7 @@ public class OwnerCommand extends SubCommand {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
         }
         g.setOwner(u.getUuid());
+        g.update(false);
         Util.sendMessage(p, Messages.INFO_CHANGED_OWNER);
         return Util.sendMessage(o, Messages.INFO_IS$NOW_OWNER);
     }

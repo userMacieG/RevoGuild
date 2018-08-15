@@ -44,6 +44,9 @@ public class TabScheme {
 
     private static void saveTablist() {
         try {
+            if (file.exists()) {
+                return;
+            }
             tablistYaml.save(file);
         } catch (Exception e) {
             Logger.exception(e);

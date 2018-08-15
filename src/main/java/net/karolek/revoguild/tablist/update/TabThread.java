@@ -5,7 +5,8 @@ import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.managers.guild.GuildManager;
 import net.karolek.revoguild.managers.user.UserManager;
-import net.karolek.revoguild.tablist.update.RankList.Data;
+import net.karolek.revoguild.tablist.RankList;
+import net.karolek.revoguild.tablist.RankList.Data;
 import net.karolek.revoguild.utils.Logger;
 
 import java.util.ArrayList;

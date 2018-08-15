@@ -21,16 +21,13 @@ import net.karolek.revoguild.store.Store;
 import net.karolek.revoguild.store.StoreMode;
 import net.karolek.revoguild.store.modes.StoreMySQL;
 import net.karolek.revoguild.store.modes.StoreSQLITE;
-import net.karolek.revoguild.tablist.packets.PacketManager;
-import net.karolek.revoguild.tablist.packets.PacketManagerImpl;
 import net.karolek.revoguild.tablist.update.TabLowUpdateTask;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.tasks.CheckValidityTask;
 import net.karolek.revoguild.tasks.CombatTask;
 import net.karolek.revoguild.tasks.RespawnCrystalTask;
-import net.karolek.revoguild.tasks.Updater;
-import net.karolek.revoguild.utils.BlockUtil;
 import net.karolek.revoguild.utils.Logger;
+import net.karolek.revoguild.utils.Ticking;
 import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.UptakeUtil;
 import org.bukkit.Bukkit;
@@ -38,12 +35,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import static net.karolek.revoguild.store.StoreMode.MYSQL;
 
 public class GuildPlugin extends JavaPlugin {
 
     private static GuildPlugin plugin;
-    private static PacketManager packetManager;
     private static Store store = null;
 
     private boolean enabled = false;
@@ -52,8 +53,45 @@ public class GuildPlugin extends JavaPlugin {
     private static Messages revoMessages;
     private static Commands revoCommands;
 
-    public static PacketManager getPacketManager() {
-        return packetManager;
+    @Override
+    public void onEnable() {
+        plugin = this;
+        new Ticking().start();
+        revoConfig = new Config(this);
+        revoMessages = new Messages(this);
+        revoCommands = new Commands(this);
+        TabScheme.reloadTablist();
+        if (!Config.ENABLED) {
+            Logger.info("This plugin is not activated in the configuration!", "To activate it, set the value 'enabled' to true!", "Plugin will be disabled!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        if (!registerDatabase()) {
+            Logger.info("Can not connect to a MySQL server!", "Plugin will be disabled!");
+            store = null;
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        registerManagers();
+        registerCommands();
+        registerListeners();
+        registerTasks();
+        start();
+        enabled = true;
+        checkUpdate();
+    }
+
+    @Override
+    public void onDisable() {
+        stop();
+        Bukkit.getScheduler().cancelTasks(this);
+        if (enabled) {
+            if (store != null && store.isConnected()) {
+                store.disconnect();
+            }
+        }
+        enabled = false;
+        plugin = null;
     }
 
     public static GuildPlugin getPlugin() {
@@ -74,47 +112,6 @@ public class GuildPlugin extends JavaPlugin {
 
     public static Commands getRevoCommands() {
         return revoCommands;
-    }
-
-    @Override
-    public void onEnable() {
-        plugin = this;
-        saveDefaultConfig();
-        revoConfig = new Config(this);
-        revoMessages = new Messages(this);
-        revoCommands = new Commands(this);
-        TabScheme.reloadTablist();
-        if (!Config.ENABLED) {
-            Logger.info("This plugin is not activated in the configuration!", "To activate it, set the value 'enabled' to true!", "Plugin will be disabled!");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        if (!registerDatabase()) {
-            Logger.info("Can not connect to a MySQL server!", "Plugin will be disabled!");
-            store = null;
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        registerManagers();
-        registerCommands();
-        registerListeners();
-        registerTasks();
-        registerOthers();
-        start();
-        enabled = true;
-    }
-
-    @Override
-    public void onDisable() {
-        stop();
-        Bukkit.getScheduler().cancelTasks(this);
-        if (enabled) {
-            if (store != null && store.isConnected()) {
-                store.disconnect();
-            }
-        }
-        enabled = false;
-        plugin = null;
     }
 
     private void start() {
@@ -167,20 +164,29 @@ public class GuildPlugin extends JavaPlugin {
         UserManager.enable();
         GuildManager.enable();
         AllianceManager.enable();
-        packetManager = new PacketManagerImpl();
     }
 
     private void registerCommands() {
         Logger.info("Register commands...");
-        SubCommand.registerCommand(new GuildCommand());
-        SubCommand.registerCommand(new GuildAdminCommand());
-        SubCommand.registerCommand(new RankingAdminCommand());
-        SubCommand.registerCommand(new RankingCommand());
-        SubCommand.registerCommand(new TopCommand());
-        SubCommand.registerCommand(new RevoGuildCommand());
-        if (Config.ESCAPE_ENABLED) {
+        if (Commands.GUILD_USER_MAIN_ENABLED) {
+            SubCommand.registerCommand(new GuildCommand());
+        }
+        if (Commands.GUILD_ADMIN_MAIN_ENABLED) {
+            SubCommand.registerCommand(new GuildAdminCommand());
+        }
+        if (Commands.RANKING_ADMIN_MAIN_ENABLED) {
+            SubCommand.registerCommand(new RankingAdminCommand());
+        }
+        if (Commands.RANKING_USER_ENABLED) {
+            SubCommand.registerCommand(new RankingCommand());
+        }
+        if (Commands.TOP_ENABLED) {
+            SubCommand.registerCommand(new TopCommand());
+        }
+        if (Config.ESCAPE_ENABLED && Commands.COMBAT_ENABLED) {
             SubCommand.registerCommand(new CombatCommand());
         }
+        SubCommand.registerCommand(new RevoGuildCommand());
     }
 
     private void registerListeners() {
@@ -215,23 +221,34 @@ public class GuildPlugin extends JavaPlugin {
     private void registerTasks() {
         Logger.info("Register tasks...");
         new CheckValidityTask().runTaskTimerAsynchronously(this, Time.HOUR.getTick(3), Time.HOUR.getTick(Config.TIME_CHECK));
-        new TabLowUpdateTask().runTaskTimerAsynchronously(this, 20L, Time.SECOND.getTick(Config.TABLIST_REFRESH_INTERVAL));
+        new TabLowUpdateTask().runTaskTimerAsynchronously(this, 20L, Time.SECOND.getTick(Config.TABLIST_REFRESH$INTERVAL));
         new RespawnCrystalTask().runTaskTimerAsynchronously(this, 20L, Time.SECOND.getTick(60));
         if (Config.ESCAPE_ENABLED) {
             new CombatTask().runTaskTimerAsynchronously(this, 40L, Time.SECOND.getTick(1));
         }
-        if (Config.UPDATER) {
-            new Updater().runTaskTimerAsynchronously(this, 20L, Time.MINUTE.getTick(5));
-        }
         new TabThread();
     }
 
-    private void registerOthers() {
-        Logger.info("Register others...");
-        if (Config.TNT_DURABILITY_ENABLED) {
-            for (String s : Config.TNT_DURABILITY_BLOCKS) {
-                BlockUtil.setDurability(s.split(" ")[0], Float.parseFloat(s.split(" ")[1]));
+    private void checkUpdate() {
+        try {
+            String url = "https://raw.githubusercontent.com/userMacieG/RevoGuild/master/version.txt";
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String version = br.readLine();
+            String myVersion = GuildPlugin.getPlugin().getDescription().getVersion();
+            int build = Integer.parseInt(version.split("-")[1].replace("b", ""));
+            int myBuild = Integer.parseInt(myVersion.split("-")[1].replace("b", ""));
+            if (!myVersion.equalsIgnoreCase(version) && build > myBuild) {
+                Logger.info("-------------[ RevoGUILD ]-------------");
+                Logger.info(" > Znaleziono nowa wersje pluginu!", "");
+                Logger.info(" > Zainstalowana wersja: " + myVersion);
+                Logger.info(" > Aktualna wersja: " + version, "");
+                Logger.info(" > Pobierz najnowsza wersje z: https://github.com/userMacieG/RevoGuild/releases");
+                Logger.info("---------------------------------------");
             }
+            conn.disconnect();
+        } catch (Exception e) {
+            Logger.warning("Blad podczas sprawdzania aktualizacji!");
         }
     }
 

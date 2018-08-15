@@ -17,14 +17,30 @@ public class GuildAdminCommand extends SubCommand {
 
     public GuildAdminCommand() {
         super(Commands.GUILD_ADMIN_MAIN_NAME, Commands.GUILD_ADMIN_MAIN_DESCRIPTION, Commands.GUILD_ADMIN_MAIN_USAGE, Commands.GUILD_ADMIN_MAIN_PERMISSION, Commands.GUILD_ADMIN_MAIN_ALIASES);
-        subCommands.add(new TeleportCommand());
-        subCommands.add(new ReloadCommand());
-        subCommands.add(new DeleteCommand());
-        subCommands.add(new SetCuboidCommand());
-        subCommands.add(new KickCommand());
-        subCommands.add(new BanCommand());
-        subCommands.add(new UnBanCommand());
-        subCommands.add(new SetCommand());
+        if (Commands.GUILD_ADMIN_TELEPORT_ENABLED) {
+            subCommands.add(new TeleportCommand());
+        }
+        if (Commands.GUILD_ADMIN_RELOAD_ENABLED) {
+            subCommands.add(new ReloadCommand());
+        }
+        if (Commands.GUILD_ADMIN_DELETE_ENABLED) {
+            subCommands.add(new DeleteCommand());
+        }
+        if (Commands.GUILD_ADMIN_SET$CUBOID_ENABLED) {
+            subCommands.add(new SetCuboidCommand());
+        }
+        if (Commands.GUILD_ADMIN_KICK_ENABLED) {
+            subCommands.add(new KickCommand());
+        }
+        if (Commands.GUILD_ADMIN_BAN_ENABLED) {
+            subCommands.add(new BanCommand());
+        }
+        if (Commands.GUILD_ADMIN_UNBAN_ENABLED) {
+            subCommands.add(new UnBanCommand());
+        }
+        if (Commands.GUILD_ADMIN_SET_ENABLED) {
+            subCommands.add(new SetCommand());
+        }
     }
 
     @Override

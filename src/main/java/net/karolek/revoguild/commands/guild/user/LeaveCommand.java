@@ -21,22 +21,18 @@ public class LeaveCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         Guild g = GuildManager.getGuild(p);
-
-        if (g == null)
+        if (g == null) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
-
+        }
         User u = UserManager.getUser(p);
-
-        if (g.isOwner(u.getUuid()))
+        if (g.isOwner(u.getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_OWNER$CANT$LEAVE$GUILD);
-
-        if (g.isLeader(u.getUuid()))
+        }
+        if (g.isLeader(u.getUuid())) {
             g.setOwner(g.getOwner());
-
+        }
         g.removeMember(u.getUuid());
-
         NameTagManager.leaveFromGuild(g, p);
-
         return Util.sendMessage(Bukkit.getOnlinePlayers(), Messages.parse(Messages.BROADCAST_GUILD_LEAVED, g, p));
     }
 }

@@ -18,27 +18,62 @@ public class GuildCommand extends SubCommand {
 
     public GuildCommand() {
         super(Commands.GUILD_USER_MAIN_NAME, Commands.GUILD_USER_MAIN_DESCRIPTION, Commands.GUILD_USER_MAIN_USAGE, Commands.GUILD_USER_MAIN_PERMISSION, Commands.GUILD_USER_MAIN_ALIASES);
-        subCommands.add(new CreateCommand());
-        subCommands.add(new DeleteCommand());
-        subCommands.add(new HomeCommand());
-        subCommands.add(new InfoCommand());
-        subCommands.add(new InviteCommand());
-        subCommands.add(new JoinCommand());
-        subCommands.add(new KickCommand());
-        subCommands.add(new LeaderCommand());
-        subCommands.add(new OwnerCommand());
-        subCommands.add(new LeaveCommand());
-        subCommands.add(new ListCommand());
-        subCommands.add(new PvpCommand());
-        subCommands.add(new EnlargeCommand());
-        subCommands.add(new SetHomeCommand());
-        subCommands.add(new ProlongCommand());
-        subCommands.add(new AllianceCommand());
-        if (Config.EFFECTS_ENABLED) {
+        if (Commands.GUILD_USER_CREATE_ENABLED) {
+            subCommands.add(new CreateCommand());
+        }
+        if (Commands.GUILD_USER_DELETE_ENABLED) {
+            subCommands.add(new DeleteCommand());
+        }
+        if (Commands.GUILD_USER_HOME_ENABLED) {
+            subCommands.add(new HomeCommand());
+        }
+        if (Commands.GUILD_USER_INFO_ENABLED) {
+            subCommands.add(new InfoCommand());
+        }
+        if (Commands.GUILD_USER_INVITE_ENABLED) {
+            subCommands.add(new InviteCommand());
+        }
+        if (Commands.GUILD_USER_JOIN_ENABLED) {
+            subCommands.add(new JoinCommand());
+        }
+        if (Commands.GUILD_USER_KICK_ENABLED) {
+            subCommands.add(new KickCommand());
+        }
+        if (Commands.GUILD_USER_LEADER_ENABLED) {
+            subCommands.add(new LeaderCommand());
+        }
+        if (Commands.GUILD_USER_OWNER_ENABLED) {
+            subCommands.add(new OwnerCommand());
+        }
+        if (Commands.GUILD_USER_LEAVE_ENABLED) {
+            subCommands.add(new LeaveCommand());
+        }
+        if (Commands.GUILD_USER_TOP_ENABLED) {
+            subCommands.add(new TopCommand());
+        }
+        if (Commands.GUILD_USER_PVP_ENABLED) {
+            subCommands.add(new PvpCommand());
+        }
+        if (Commands.GUILD_USER_ENLARGE_ENABLED) {
+            subCommands.add(new EnlargeCommand());
+        }
+        if (Commands.GUILD_USER_SET$HOME_ENABLED) {
+            subCommands.add(new SetHomeCommand());
+        }
+        if (Commands.GUILD_USER_PROLONG_ENABLED) {
+            subCommands.add(new ProlongCommand());
+        }
+        if (Commands.GUILD_USER_ALLIANCE_ENABLED) {
+            subCommands.add(new AllianceCommand());
+        }
+        if (Config.EFFECTS_ENABLED && Commands.GUILD_USER_EFFECT_ENABLED) {
             subCommands.add(new EffectCommand());
         }
-        if (Config.TREASURE_ENABLED) {
+        if (Config.TREASURE_ENABLED && Commands.GUILD_USER_TREASURE_ENABLED) {
             subCommands.add(new TreasureCommand());
+        }
+        if (Commands.GUILD_USER_ITEMS_ENABLED) {
+            subCommands.add(new ItemsCommand());
         }
     }
 

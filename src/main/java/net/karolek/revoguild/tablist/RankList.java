@@ -1,4 +1,4 @@
-package net.karolek.revoguild.tablist.update;
+package net.karolek.revoguild.tablist;
 
 import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.objects.user.User;

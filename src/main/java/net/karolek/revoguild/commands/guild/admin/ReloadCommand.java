@@ -20,6 +20,7 @@ public class ReloadCommand extends SubCommand {
     public boolean onCommand(Player p, String[] args) {
         GuildPlugin.getRevoConfig().reloadConfiguration();
         GuildPlugin.getRevoMessages().reloadConfiguration();
+        GuildPlugin.getRevoCommands().reloadConfiguration();
         TabScheme.reloadTablist();
         TabThread.restart();
         return Util.sendMessage(p, Messages.INFO_RELOADED);

@@ -76,7 +76,9 @@ public class Config extends Configuration {
     public static boolean MOVEMENT_NOTIFY_ENABLED = true;
     public static boolean MOVEMENT_NOTIFY_INTRUDER_ENABLED = true;
 
-    public static int ALLIANCES_MAX = 3;
+    public static int MEMBERS$MAX = 30;
+
+    public static int ALLIANCES$MAX = 3;
 
     public static boolean ACTIONS_BLOCK_BREAK = false;
     public static boolean ACTIONS_BLOCK_PLACE = false;
@@ -94,17 +96,11 @@ public class Config extends Configuration {
     public static String TREASURE_TITLE = "Skarbiec gildii:";
     public static int TREASURE_ROWS = 6;
 
-    public static boolean TNT_OFF_ENABLED = false;
-    public static List<Integer> TNT_OFF_HOURS = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8);
-
     public static boolean TNT_PROTECTION_ENABLED = false;
     public static int TNT_PROTECTION_TIME = 24;
 
     public static boolean TNT_CANT$BUILD_ENABLED = false;
     public static int TNT_CANT$BUILD_TIME = 90;
-
-    public static boolean TNT_DURABILITY_ENABLED = false;
-    public static List<String> TNT_DURABILITY_BLOCKS = Arrays.asList("OBSIDIAN 73.6", "WATER 10.0");
 
     public static String ITEMS_CREATE_NORMAL = "1:0-10;";
     public static String ITEMS_JOIN_NORMAL = "1:0-10;";
@@ -146,7 +142,8 @@ public class Config extends Configuration {
     public static int TIME_TELEPORT = 10;
 
     public static boolean TABLIST_ENABLED = false;
-    public static int TABLIST_REFRESH_INTERVAL = 10;
+    public static int TABLIST_REFRESH$INTERVAL = 10;
+    public static int TABLIST_TOPS$MAX = 16;
 
     public static String TABLIST_FORMAT_GTOP = "{TAG} &7[&8{POINTS}&7]";
     public static String TABLIST_FORMAT_PTOP = "{NAME}";

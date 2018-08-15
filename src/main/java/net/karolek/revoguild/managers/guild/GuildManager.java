@@ -6,7 +6,7 @@ import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.data.Config;
-import net.karolek.revoguild.tablist.update.RankList;
+import net.karolek.revoguild.tablist.RankList;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Logger;
 import net.karolek.revoguild.utils.SpaceUtil;
@@ -98,7 +98,6 @@ public class GuildManager {
         }
         return -1;
     }
-
 
     public static void setGuildRoom(Guild g) {
         Location c = g.getCuboid().getCenter();

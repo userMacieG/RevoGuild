@@ -23,22 +23,18 @@ public class ProlongCommand extends SubCommand {
     @Override
     public boolean onCommand(Player p, String[] args) {
         Guild g = GuildManager.getGuild(p);
-
-        if (g == null)
+        if (g == null) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
-
+        }
         long t = g.getExpireTime();
-
-        if ((t - System.currentTimeMillis()) >= Time.DAY.getTime(Config.TIME_MAX))
+        if ((t - System.currentTimeMillis()) >= Time.DAY.getTime(Config.TIME_MAX)) {
             return Util.sendMessage(p, Messages.ERROR_CANT_PROLONG);
-
+        }
         List<ItemStack> items = ItemUtil.getItems(p.hasPermission("revoguild.vip") ? Config.ITEMS_PROLONG_VIP : Config.ITEMS_PROLONG_NORMAL, 1);
-
-        if (!ItemUtil.checkAndRemove(items, p))
+        if (!ItemUtil.checkAndRemove(items, p)) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
-
+        }
         g.addExpireTime(Time.DAY.getTime(Config.TIME_ADD));
-
         return Util.sendMessage(p, Messages.INFO_PROLONGED$VALIDITY);
     }
 }

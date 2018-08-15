@@ -1,8 +1,9 @@
 package net.karolek.revoguild.managers.user;
 
 import net.karolek.revoguild.GuildPlugin;
+import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.objects.user.User;
-import net.karolek.revoguild.tablist.update.RankList;
+import net.karolek.revoguild.tablist.RankList;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Logger;
 import org.bukkit.OfflinePlayer;

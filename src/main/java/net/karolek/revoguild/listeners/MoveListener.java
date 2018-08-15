@@ -1,5 +1,7 @@
 package net.karolek.revoguild.listeners;
 
+import net.karolek.revoguild.enums.NotifyType;
+import net.karolek.revoguild.managers.guild.AllianceManager;
 import net.karolek.revoguild.objects.guild.Guild;
 import net.karolek.revoguild.data.Config;
 import net.karolek.revoguild.data.Messages;
@@ -7,6 +9,7 @@ import net.karolek.revoguild.managers.guild.GuildManager;
 import net.karolek.revoguild.managers.user.UserManager;
 import net.karolek.revoguild.utils.enums.Time;
 import net.karolek.revoguild.utils.Util;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +26,7 @@ public class MoveListener implements Listener {
         if (!Config.MOVEMENT_NOTIFY_ENABLED) {
             return;
         }
+        Player p = e.getPlayer();
         int xfrom = e.getFrom().getBlockX();
         int zfrom = e.getFrom().getBlockZ();
         int yfrom = e.getFrom().getBlockY();
@@ -30,13 +34,21 @@ public class MoveListener implements Listener {
         int yto = e.getTo().getBlockY();
         int zto = e.getTo().getBlockZ();
         if ((xfrom != xto) || (zfrom != zto) || (yfrom != yto)) {
-            Player p = e.getPlayer();
             Guild from = GuildManager.getGuild(e.getFrom());
             Guild to = GuildManager.getGuild(e.getTo());
             if ((from == null) && (to != null)) {
-                Util.sendMessage(p, Messages.parse(Messages.INFO_MOVE_IN, to));
+                if (to.getMembers().contains(p.getUniqueId())) {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD.getMessageIn(), to));
+                } else if (AllianceManager.hasAlliance(to, GuildManager.getGuild(p))) {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD_ALLIANCE.getMessageIn(), to));
+                } else {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD_ENEMY.getMessageIn(), to));
+                }
                 if (Config.MOVEMENT_NOTIFY_INTRUDER_ENABLED) {
-                    if (to.isMember(UserManager.getUser(e.getPlayer()).getUuid())) {
+                    if (to.isMember(p.getUniqueId())) {
+                        return;
+                    }
+                    if (p.isOp() || p.hasPermission("revoguild.notify.bypass")) {
                         return;
                     }
                     Long time = times.get(to);
@@ -46,11 +58,15 @@ public class MoveListener implements Listener {
                     }
                 }
             } else if ((from != null) && (to == null)) {
-                Util.sendMessage(p, Messages.parse(Messages.INFO_MOVE_OUT, from));
+                if (from.getMembers().contains(p.getUniqueId())) {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD.getMessageOut(), from));
+                } else if (AllianceManager.hasAlliance(from, GuildManager.getGuild(p))) {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD_ALLIANCE.getMessageOut(), from));
+                } else {
+                    Util.sendMessage(p, Messages.parse(NotifyType.GUILD_ENEMY.getMessageOut(), from));
+                }
             }
-
         }
-
     }
 
 }

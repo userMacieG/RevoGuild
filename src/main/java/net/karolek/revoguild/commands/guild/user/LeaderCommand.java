@@ -24,31 +24,27 @@ public class LeaderCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        if (args.length != 1)
+        if (args.length != 1) {
             return Util.sendMessage(p, Messages.parse(Messages.COMMANDS_NO$ENOUGH$ARGS, this));
-
+        }
         Guild g = GuildManager.getGuild(p);
-
-        if (g == null)
+        if (g == null) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
-
-        if (!g.isOwner(UserManager.getUser(p).getUuid()))
+        }
+        if (!g.isOwner(UserManager.getUser(p).getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_YOU$ARENT$OWNER);
-
-        @SuppressWarnings("deprecation")
+        }
         Player o = Bukkit.getPlayer(args[0]);
         User u = UserManager.getUser(o);
-
-        if (!g.isMember(u.getUuid()))
+        if (!g.isMember(u.getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_PLAYER$ISNT_MEMBER);
-
+        }
         List<ItemStack> items = ItemUtil.getItems(p.hasPermission("revoguild.vip") ? Config.ITEMS_LEADER_VIP : Config.ITEMS_LEADER_NORMAL, 1);
-
-        if (!ItemUtil.checkAndRemove(items, p))
+        if (!ItemUtil.checkAndRemove(items, p)) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_ITEMS.replace("{ITEMS}", ItemUtil.getItems(items)));
-
+        }
         g.setLeader(u.getUuid());
-
+        g.update(false);
         Util.sendMessage(p, Messages.INFO_CHANGED_LEADER);
         return Util.sendMessage(o, Messages.INFO_IS$NOW_LEADER);
     }

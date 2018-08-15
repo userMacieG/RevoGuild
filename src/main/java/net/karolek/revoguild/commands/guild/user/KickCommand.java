@@ -21,28 +21,25 @@ public class KickCommand extends SubCommand {
 
     @Override
     public boolean onCommand(Player p, String[] args) {
-        if (args.length != 1)
+        if (args.length != 1) {
             return Util.sendMessage(p, Messages.parse(Messages.COMMANDS_NO$ENOUGH$ARGS, this));
-
+        }
         Guild g = GuildManager.getGuild(p);
-
-        if (g == null)
+        if (g == null) {
             return Util.sendMessage(p, Messages.ERROR_DONT$HAVE_GUILD);
-
-        if (!g.isLeader(UserManager.getUser(p).getUuid()))
+        }
+        if (!g.isLeader(UserManager.getUser(p).getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_YOU$ARENT$LEADER);
-
-        @SuppressWarnings("deprecation")
+        }
         OfflinePlayer op = Bukkit.getOfflinePlayer(args[0]);
         User u = UserManager.getUser(op);
-        if (g.isLeader(u.getUuid()))
+        if (g.isLeader(u.getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_CANT_KICK$LEADER$OR$OWNER);
-
-        if (!g.removeMember(u.getUuid()))
+        }
+        if (!g.removeMember(u.getUuid())) {
             return Util.sendMessage(p, Messages.ERROR_PLAYER$ISNT_MEMBER);
-
+        }
         NameTagManager.leaveFromGuild(g, op);
-
         return Util.sendMessage(Bukkit.getOnlinePlayers(), Messages.parse(Messages.BROADCAST_GUILD_KICKED, g, op));
     }
 }

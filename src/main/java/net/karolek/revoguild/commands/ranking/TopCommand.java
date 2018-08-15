@@ -4,7 +4,7 @@ import net.karolek.revoguild.objects.user.User;
 import net.karolek.revoguild.commands.SubCommand;
 import net.karolek.revoguild.data.Commands;
 import net.karolek.revoguild.data.Messages;
-import net.karolek.revoguild.tablist.update.RankList.Data;
+import net.karolek.revoguild.tablist.RankList.Data;
 import net.karolek.revoguild.tablist.update.TabThread;
 import net.karolek.revoguild.utils.Util;
 import org.bukkit.entity.Player;
