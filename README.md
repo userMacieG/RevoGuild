@@ -2,7 +2,7 @@
 
 **==================**
 
-##RevoGuild v0.4.1-b333
+## RevoGuild v0.4.1-b333
 
 Kompatybilny z: `Spigot 1.8.8`
 
@@ -16,7 +16,7 @@ Rozbudowany system gildii na Twój serwer!
 
 **==================**
 
-###Komendy:
+### Komendy:
 
 **Komendy gracza:**
 > * /g sojusz <tag/nazwa> - zarzadzanie sojuszami gildii
@@ -58,7 +58,7 @@ Rozbudowany system gildii na Twój serwer!
 
 **==================**
 
-###Funkcje:
+### Funkcje:
 > * tworzenie, usuwanie gildii;
 > * zapraszanie, wyrzucanie członków z gildii;
 > * dołączenie, opuszczanie gildii;
@@ -82,7 +82,7 @@ Rozbudowany system gildii na Twój serwer!
  
  **==================**
  
- ###TODO:
+ ### TODO:
  - [ ] Oddzielne odswieżanie pingu oraz godziny;
  - [ ] Możliwość zmiany tekstury głowy na tabliscie;
  - [ ] Kilku liderów;
@@ -94,9 +94,9 @@ Rozbudowany system gildii na Twój serwer!
  
   **==================**
   
- ###Podziękowania:
+ ### Podziękowania:
  @kamilkime - Pomógł z zapisem i wczytywaniem tablisty (Dzięki <3)
  
   **==================**
   
- ###Kontakt: [Discord](https://discord.gg/r8JzXVd)
+ ### Kontakt: [Discord](https://discord.gg/r8JzXVd)
